@@ -18,8 +18,11 @@ function Write-SyncLog {
 function Invoke-GitCommand {
     param([string[]]$Arguments)
 
+    $previousErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     $output = & git @Arguments 2>&1
     $exitCode = $LASTEXITCODE
+    $ErrorActionPreference = $previousErrorActionPreference
     if ($output) {
         Add-Content -LiteralPath $logPath -Value ($output | Out-String) -Encoding UTF8
     }
@@ -41,16 +44,8 @@ try {
     Set-Location -LiteralPath $repoPath
     Write-SyncLog "Sync check started."
 
-    $trackedFiles = @(
-        ".gitignore",
-        "README.md",
-        "index.html",
-        "营销反作弊系统原型.html",
-        "scripts/sync-prototype.ps1",
-        "scripts/install-auto-sync.ps1"
-    )
-
-    Invoke-GitCommand -Arguments (@("add", "--") + $trackedFiles)
+    # Only update files already tracked by Git. Untracked workspace files are never staged.
+    Invoke-GitCommand -Arguments @("add", "--update", "--")
 
     & git diff --cached --quiet --
     $diffExitCode = $LASTEXITCODE
@@ -80,4 +75,3 @@ finally {
     }
     $mutex.Dispose()
 }
-
