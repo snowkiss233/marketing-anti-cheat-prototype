@@ -20,7 +20,7 @@ function Invoke-GitCommand {
 
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
-    $output = & git @Arguments 2>&1
+    $output = & git @Arguments 2>$null
     $exitCode = $LASTEXITCODE
     $ErrorActionPreference = $previousErrorActionPreference
     if ($output) {
