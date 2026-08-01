@@ -1,0 +1,10 @@
+# This repository publishes only the marketing anti-cheat prototype.
+*
+!.gitignore
+!README.md
+!index.html
+!营销反作弊系统原型.html
+!scripts/
+!scripts/sync-prototype.ps1
+!scripts/install-auto-sync.ps1
+
