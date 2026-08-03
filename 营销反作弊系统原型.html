@@ -359,6 +359,37 @@
       grid-template-columns: repeat(3, minmax(170px, 1fr)) auto auto auto;
     }
 
+    .filter-card.login-blacklist-filter {
+      grid-template-columns: 120px 130px minmax(130px, 1fr) minmax(280px, 1.5fr) 68px 68px 68px;
+      gap: 10px;
+    }
+
+    .filter-card.login-unban-filter {
+      grid-template-columns: 140px minmax(160px, 1fr) minmax(280px, 1.5fr) 68px 68px;
+      gap: 12px;
+    }
+
+    .filter-card.login-blacklist-filter .field,
+    .filter-card.login-unban-filter .field {
+      min-width: 0;
+    }
+
+    .date-range-inputs {
+      display: grid;
+      grid-template-columns: minmax(110px, 1fr) auto minmax(110px, 1fr);
+      gap: 8px;
+      align-items: center;
+    }
+
+    .date-range-inputs .input {
+      min-width: 0;
+    }
+
+    .date-range-separator {
+      color: #8a98aa;
+      text-align: center;
+    }
+
     .filter-card.multi-filter {
       grid-template-columns: repeat(4, minmax(155px, 1fr)) auto auto auto;
     }
@@ -1425,6 +1456,8 @@
 
       .filter-card,
       .filter-card.blacklist,
+      .filter-card.login-blacklist-filter,
+      .filter-card.login-unban-filter,
       .filter-card.whitelist-filter,
       .filter-card.device-filter,
       .device-summary-grid {
@@ -2057,7 +2090,7 @@
           </div>
 
           <div class="tab-panel active" id="login-blacklist-list">
-            <div class="card filter-card blacklist">
+            <div class="card filter-card login-blacklist-filter">
               <div class="field">
                 <label>实体类型</label>
                 <select class="select" id="login-blacklist-type">
@@ -2081,6 +2114,14 @@
               <div class="field">
                 <label>实体值</label>
                 <input class="input" id="login-blacklist-keyword" placeholder="请输入查询内容">
+              </div>
+              <div class="field">
+                <label>封禁时间</label>
+                <div class="date-range-inputs">
+                  <input class="input" type="date" id="login-blacklist-start-date" aria-label="封禁开始日期">
+                  <span class="date-range-separator">至</span>
+                  <input class="input" type="date" id="login-blacklist-end-date" aria-label="封禁结束日期">
+                </div>
               </div>
               <button class="btn btn-primary" id="login-blacklist-search">查询</button>
               <button class="btn" id="login-blacklist-reset">重置</button>
@@ -2125,7 +2166,7 @@
           </div>
 
           <div class="tab-panel" id="login-unban-list">
-            <div class="card filter-card">
+            <div class="card filter-card login-unban-filter">
               <div class="field">
                 <label>实体类型</label>
                 <select class="select" id="login-unban-type">
@@ -2141,7 +2182,14 @@
                 <label>实体值</label>
                 <input class="input" id="login-unban-keyword" placeholder="请输入查询内容">
               </div>
-              <div></div>
+              <div class="field">
+                <label>解封时间</label>
+                <div class="date-range-inputs">
+                  <input class="input" type="date" id="login-unban-start-date" aria-label="解封开始日期">
+                  <span class="date-range-separator">至</span>
+                  <input class="input" type="date" id="login-unban-end-date" aria-label="解封结束日期">
+                </div>
+              </div>
               <button class="btn btn-primary" id="login-unban-search">查询</button>
               <button class="btn" id="login-unban-reset">重置</button>
             </div>
@@ -3378,6 +3426,21 @@
       );
     }
 
+    function validateDateRange(startDate, endDate, label) {
+      if (startDate && endDate && startDate > endDate) {
+        showToast(`${label}的开始日期不能晚于结束日期`);
+        return false;
+      }
+      return true;
+    }
+
+    function dateTimeMatchesRange(dateTime, startDate, endDate) {
+      if (!startDate && !endDate) return true;
+      const date = String(dateTime || "").slice(0, 10);
+      if (!date) return false;
+      return (!startDate || date >= startDate) && (!endDate || date <= endDate);
+    }
+
     function formatEntitySummary(record) {
       return record.entities
         .map(entity => `[${entity.type}] ${entity.value}`)
@@ -3511,9 +3574,13 @@
       const keyword = $("#login-blacklist-keyword").value.trim().toLowerCase();
       const type = $("#login-blacklist-type").value;
       const source = $("#login-blacklist-source").value;
+      const startDate = $("#login-blacklist-start-date").value;
+      const endDate = $("#login-blacklist-end-date").value;
+      if (!validateDateRange(startDate, endDate, "封禁时间")) return;
       const list = loginBlacklists.filter(item =>
         recordMatchesEntity(item, keyword, type) &&
-        (!source || item.source === source)
+        (!source || item.source === source) &&
+        dateTimeMatchesRange(item.createdAt, startDate, endDate)
       );
 
       $("#login-blacklist-body").innerHTML = list.length ? list.map(item => `
@@ -3535,9 +3602,13 @@
     function renderLoginUnbanRecords() {
       const keyword = $("#login-unban-keyword").value.trim().toLowerCase();
       const type = $("#login-unban-type").value;
+      const startDate = $("#login-unban-start-date").value;
+      const endDate = $("#login-unban-end-date").value;
+      if (!validateDateRange(startDate, endDate, "解封时间")) return;
       const list = loginUnbanRecords.filter(item =>
         (!keyword || item.value.toLowerCase().includes(keyword)) &&
-        (!type || item.type === type)
+        (!type || item.type === type) &&
+        dateTimeMatchesRange(item.unbanAt, startDate, endDate)
       );
 
       $("#login-unban-body").innerHTML = list.length ? list.map(item => `
@@ -4814,6 +4885,8 @@
       $("#login-blacklist-keyword").value = "";
       $("#login-blacklist-type").value = "";
       $("#login-blacklist-source").value = "";
+      $("#login-blacklist-start-date").value = "";
+      $("#login-blacklist-end-date").value = "";
       syncCustomSelects();
       renderLoginBlacklists();
     });
@@ -4821,6 +4894,8 @@
     $("#login-unban-reset").addEventListener("click", () => {
       $("#login-unban-keyword").value = "";
       $("#login-unban-type").value = "";
+      $("#login-unban-start-date").value = "";
+      $("#login-unban-end-date").value = "";
       syncCustomSelects();
       renderLoginUnbanRecords();
     });
