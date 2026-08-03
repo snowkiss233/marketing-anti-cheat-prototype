@@ -6,14 +6,12 @@
 
 - `index.html`：仓库访问入口，自动跳转至主原型。
 - `营销反作弊系统原型.html`：当前主原型文件。
-- `scripts/sync-prototype.ps1`：检测受控文件变化并提交、同步至 GitHub。
-- `scripts/install-auto-sync.ps1`：在 Windows 中安装每 5 分钟执行一次的自动同步任务。
+- `scripts/sync-prototype.ps1`：在原型修改完成后，手动提交并同步至 GitHub。
 
 ## 同步范围
 
 仓库采用文件白名单，只同步上述原型及维护文件。同目录中的 PRD、截图、表格和其他原型不会被提交。
 
-## 自动同步
+## 同步方式
 
-本机计划任务 `MarketingAntiCheatPrototypeSync` 每 5 分钟检查一次。仅在受控文件发生变化时创建提交并推送；未发生变化时不会产生空提交。
-
+不启用定时任务。每次由 Codex 完成原型修改和验证后，再执行同步脚本提交并推送到 GitHub；未发生变化时不会产生空提交。
