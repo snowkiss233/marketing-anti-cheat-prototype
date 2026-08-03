@@ -1308,6 +1308,62 @@
       font-size: 12px;
     }
 
+    .unban-entity-selector {
+      padding: 14px 16px;
+      background: #f8fafc;
+      border: 1px solid #e5eaf1;
+      border-radius: 7px;
+    }
+
+    .unban-select-all,
+    .unban-entity-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: #44536a;
+      cursor: pointer;
+      line-height: 1.6;
+    }
+
+    .unban-select-all {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e5eaf1;
+      font-weight: 600;
+    }
+
+    .unban-entity-option + .unban-entity-option {
+      margin-top: 8px;
+    }
+
+    .unban-select-all input,
+    .unban-entity-option input {
+      flex: 0 0 auto;
+      width: 16px;
+      height: 16px;
+      margin-top: 3px;
+      accent-color: var(--blue);
+    }
+
+    .unban-entity-type {
+      flex: 0 0 72px;
+      color: #596a80;
+      font-weight: 600;
+    }
+
+    .unban-entity-value {
+      min-width: 0;
+      color: #33445c;
+      word-break: break-all;
+    }
+
+    .field-error {
+      min-height: 18px;
+      margin-top: 6px;
+      color: var(--danger);
+      font-size: 12px;
+    }
+
     .confirm-text {
       color: #59677a;
       line-height: 1.8;
@@ -1839,7 +1895,7 @@
               <button class="btn" id="blacklist-export">导出</button>
             </div>
 
-            <div class="strategy-hint">记录口径：每一行是一条多实体活动黑名单记录；用户ID、IP、设备ID、手机号、手机号段可组合保存，任一实体命中即执行整条记录的“禁止领奖”处置，解封时整条记录一并失效。</div>
+            <div class="strategy-hint">记录口径：每一行是一条多实体活动黑名单记录；用户ID、IP、设备ID、手机号、手机号段可组合保存，任一实体命中即执行该记录的“禁止领奖”处置。解封时可选择部分或全部实体；仅被选中的实体失效，未选实体继续生效。</div>
 
             <div class="card table-card">
               <div class="table-wrap">
@@ -1899,7 +1955,7 @@
               <button class="btn" id="unban-reset">重置</button>
             </div>
 
-            <div class="strategy-hint">展示口径：解封操作仍按整条黑名单执行，但解封记录按实体拆分展示；同一黑名单记录内的多个实体共享原封禁信息、解封原因、解封时间和操作人。</div>
+            <div class="strategy-hint">展示口径：解封记录按实体拆分展示；部分解封仅记录本次选中的实体，未选实体继续保留在原活动黑名单记录中。</div>
 
             <div class="card table-card">
               <div class="table-wrap">
@@ -2031,7 +2087,7 @@
               <button class="btn" id="login-blacklist-export">导出</button>
             </div>
 
-            <div class="strategy-hint">记录口径：每一行是一条多实体登录黑名单记录；用户ID、IP、设备ID、手机号、手机号段可组合保存，任一实体命中即执行整条记录的“禁止登录”处置，解封时整条记录一并失效。</div>
+            <div class="strategy-hint">记录口径：每一行是一条多实体登录黑名单记录；用户ID、IP、设备ID、手机号、手机号段可组合保存，任一实体命中即执行该记录的“禁止登录”处置。解封时可选择部分或全部实体；仅被选中的实体失效，未选实体继续生效。</div>
 
             <div class="card table-card">
               <div class="table-wrap">
@@ -2090,7 +2146,7 @@
               <button class="btn" id="login-unban-reset">重置</button>
             </div>
 
-            <div class="strategy-hint">展示口径：解封操作仍按整条黑名单执行，但解封记录按实体拆分展示；同一黑名单记录内的多个实体共享原封禁信息、解封原因、解封时间和操作人。</div>
+            <div class="strategy-hint">展示口径：解封记录按实体拆分展示；部分解封仅记录本次选中的实体，未选实体继续保留在原登录黑名单记录中。</div>
 
             <div class="card table-card">
               <div class="table-wrap">
@@ -2480,7 +2536,7 @@
                 <textarea class="textarea" id="form-blacklist-reason" maxlength="200" placeholder="请输入该条活动黑名单记录的封禁原因，最多 200 字" required></textarea>
               </div>
             </div>
-            <span class="info-tip">ⓘ 记录内所有实体共用封禁范围、封禁时长、封禁原因、操作人和操作时间；解封时整条记录一并失效。</span>
+            <span class="info-tip">ⓘ 记录内所有实体共用封禁范围、封禁时长、封禁原因、操作人和操作时间；解封时可选择部分或全部实体。</span>
           </div>
         </form>
       </div>
@@ -2539,7 +2595,7 @@
                 <textarea class="textarea" id="form-login-blacklist-reason" maxlength="200" placeholder="请输入本批登录黑名单实体的封禁原因，最多 200 字"></textarea>
               </div>
             </div>
-            <span class="info-tip">ⓘ 记录内所有实体共用封禁范围、封禁时长、封禁原因、操作人和操作时间；解封时整条记录一并失效。</span>
+            <span class="info-tip">ⓘ 记录内所有实体共用封禁范围、封禁时长、封禁原因、操作人和操作时间；解封时可选择部分或全部实体。</span>
           </div>
         </form>
       </div>
@@ -2612,17 +2668,24 @@
   <div class="modal-mask" id="login-unban-modal">
     <div class="modal small">
       <div class="modal-header">
-        <h2 class="modal-title">登录黑名单整条记录解封</h2>
+        <h2 class="modal-title">登录黑名单解封</h2>
         <button class="close" data-close="login-unban-modal">×</button>
       </div>
       <div class="modal-body">
-        <p class="page-description" style="margin: -6px 0 18px;">解封后，该条记录内的所有实体将同步失效，不支持仅解封其中一个实体。</p>
+        <p class="page-description" style="margin: -6px 0 18px;">可选择本次需要解封的实体；未勾选实体继续维持原封禁。</p>
         <form id="login-unban-form">
           <input type="hidden" id="form-login-unban-id">
           <div class="form-grid single">
             <div class="field">
-              <label>待解封记录所含实体</label>
-              <textarea class="textarea" id="form-login-unban-value" rows="3" disabled></textarea>
+              <label class="required">解封实体</label>
+              <div class="unban-entity-selector">
+                <label class="unban-select-all">
+                  <input type="checkbox" id="login-unban-select-all">
+                  <span>全选</span>
+                </label>
+                <div id="login-unban-entity-options"></div>
+              </div>
+              <div class="field-error" id="login-unban-entity-error"></div>
             </div>
             <div class="field">
               <label>原封禁范围</label>
@@ -2762,17 +2825,24 @@
   <div class="modal-mask" id="unban-modal">
     <div class="modal small">
       <div class="modal-header">
-        <h2 class="modal-title">活动黑名单整条记录解封</h2>
+        <h2 class="modal-title">活动黑名单解封</h2>
         <button class="close" data-close="unban-modal">×</button>
       </div>
       <div class="modal-body">
-        <p class="page-description" style="margin: -6px 0 18px;">解封后，该条记录内的所有实体将同步失效，不支持仅解封其中一个实体。</p>
+        <p class="page-description" style="margin: -6px 0 18px;">可选择本次需要解封的实体；未勾选实体继续维持原封禁。</p>
         <form id="unban-form">
           <input type="hidden" id="form-unban-id">
           <div class="form-grid single">
             <div class="field">
-              <label>待解封记录所含实体</label>
-              <textarea class="textarea" id="form-unban-value" rows="3" disabled></textarea>
+              <label class="required">解封实体</label>
+              <div class="unban-entity-selector">
+                <label class="unban-select-all">
+                  <input type="checkbox" id="unban-select-all">
+                  <span>全选</span>
+                </label>
+                <div id="unban-entity-options"></div>
+              </div>
+              <div class="field-error" id="unban-entity-error"></div>
             </div>
             <div class="field">
               <label>原封禁范围</label>
@@ -4269,30 +4339,100 @@
       saveMultiBlacklist("activity");
     }
 
-    function openLoginUnban(id) {
-      const item = loginBlacklists.find(record => record.id === id);
-      if (!item) return;
-      $("#login-unban-form").reset();
-      $("#form-login-unban-id").value = item.id;
-      $("#form-login-unban-value").value = formatEntitySummary(item);
-      $("#form-login-unban-scope").value = item.scope;
-      $("#form-login-unban-source").value = item.source;
-      $("#form-login-unban-reason-origin").value = item.reason;
-      openModal("login-unban-modal");
+    function getUnbanUi(kind) {
+      const prefix = kind === "login" ? "login-" : "";
+      return {
+        form: $(`#${prefix}unban-form`),
+        recordId: $(`#form-${prefix}unban-id`),
+        selectAll: $(`#${prefix}unban-select-all`),
+        options: $(`#${prefix}unban-entity-options`),
+        error: $(`#${prefix}unban-entity-error`),
+        scope: $(`#form-${prefix}unban-scope`),
+        source: $(`#form-${prefix}unban-source`),
+        originalReason: $(`#form-${prefix}unban-reason-origin`),
+        reason: $(`#form-${prefix}unban-reason`),
+        modalId: `${prefix}unban-modal`
+      };
     }
 
-    function saveLoginUnban() {
-      const id = Number($("#form-login-unban-id").value);
-      const reason = $("#form-login-unban-reason").value.trim();
+    function renderUnbanEntityOptions(kind, item) {
+      const ui = getUnbanUi(kind);
+      ui.options.innerHTML = item.entities.map((entity, index) => `
+        <label class="unban-entity-option">
+          <input type="checkbox" data-unban-index="${index}">
+          <span class="unban-entity-type">${escapeHtml(entity.type)}</span>
+          <span class="unban-entity-value">${escapeHtml(entity.value)}</span>
+        </label>
+      `).join("");
+      ui.selectAll.checked = false;
+      ui.selectAll.indeterminate = false;
+      ui.error.textContent = "";
+    }
+
+    function syncUnbanSelectAll(kind) {
+      const ui = getUnbanUi(kind);
+      const checkboxes = [...ui.options.querySelectorAll("input[data-unban-index]")];
+      const selectedCount = checkboxes.filter(checkbox => checkbox.checked).length;
+      ui.selectAll.checked = checkboxes.length > 0 && selectedCount === checkboxes.length;
+      ui.selectAll.indeterminate = selectedCount > 0 && selectedCount < checkboxes.length;
+      if (selectedCount > 0) ui.error.textContent = "";
+    }
+
+    function setAllUnbanEntities(kind, checked) {
+      const ui = getUnbanUi(kind);
+      ui.options.querySelectorAll("input[data-unban-index]").forEach(checkbox => {
+        checkbox.checked = checked;
+      });
+      syncUnbanSelectAll(kind);
+    }
+
+    function getSelectedUnbanIndexes(kind) {
+      const ui = getUnbanUi(kind);
+      return new Set(
+        [...ui.options.querySelectorAll("input[data-unban-index]:checked")]
+          .map(checkbox => Number(checkbox.dataset.unbanIndex))
+      );
+    }
+
+    function openMultiEntityUnban(kind, id) {
+      const records = kind === "login" ? loginBlacklists : blacklists;
+      const item = records.find(record => record.id === id);
+      if (!item) return;
+      const ui = getUnbanUi(kind);
+      ui.form.reset();
+      ui.recordId.value = item.id;
+      renderUnbanEntityOptions(kind, item);
+      ui.scope.value = item.scope;
+      ui.source.value = item.source;
+      ui.originalReason.value = item.reason;
+      openModal(ui.modalId);
+    }
+
+    function saveSelectedUnban(kind) {
+      const activeRecords = kind === "login" ? loginBlacklists : blacklists;
+      const historyRecords = kind === "login" ? loginUnbanRecords : unbanRecords;
+      const ui = getUnbanUi(kind);
+      const id = Number(ui.recordId.value);
+      const selectedIndexes = getSelectedUnbanIndexes(kind);
+      if (!selectedIndexes.size) {
+        ui.error.textContent = "请至少选择一个解封实体";
+        showToast("请至少选择一个解封实体");
+        return;
+      }
+
+      const reason = ui.reason.value.trim();
       if (!reason) {
         showToast("请填写解封原因");
         return;
       }
-      const index = loginBlacklists.findIndex(item => item.id === id);
+
+      const index = activeRecords.findIndex(item => item.id === id);
       if (index < 0) return;
-      const [item] = loginBlacklists.splice(index, 1);
+      const item = activeRecords[index];
+      const selectedEntities = item.entities.filter((entity, entityIndex) => selectedIndexes.has(entityIndex));
+      const remainingEntities = item.entities.filter((entity, entityIndex) => !selectedIndexes.has(entityIndex));
       const unbanAt = nowText();
-      const records = item.entities.map(entity => ({
+      const newHistoryRecords = selectedEntities.map(entity => ({
         value: entity.value,
         type: entity.type,
         scope: item.scope,
@@ -4304,11 +4444,37 @@
         unbanAt,
         operator: "管理员"
       }));
-      loginUnbanRecords.unshift(...records);
-      closeModal("login-unban-modal");
-      renderLoginBlacklists();
-      renderLoginUnbanRecords();
-      showToast(`整条登录黑名单已解封，已生成 ${records.length} 条实体解封记录`);
+
+      if (remainingEntities.length) {
+        item.entities = remainingEntities;
+      } else {
+        activeRecords.splice(index, 1);
+      }
+      historyRecords.unshift(...newHistoryRecords);
+      closeModal(ui.modalId);
+
+      if (kind === "login") {
+        renderLoginBlacklists();
+        renderLoginUnbanRecords();
+      } else {
+        renderBlacklists();
+        renderUnbanRecords();
+      }
+
+      const blacklistName = kind === "login" ? "登录黑名单" : "活动黑名单";
+      if (remainingEntities.length) {
+        showToast(`已解封 ${selectedEntities.length} 个实体，原${blacklistName}记录保留 ${remainingEntities.length} 个实体`);
+      } else {
+        showToast(`该条${blacklistName}已全部解封，已生成 ${selectedEntities.length} 条实体解封记录`);
+      }
+    }
+
+    function openLoginUnban(id) {
+      openMultiEntityUnban("login", id);
+    }
+
+    function saveLoginUnban() {
+      saveSelectedUnban("login");
     }
 
     function exportLoginBlacklists() {
@@ -4329,45 +4495,11 @@
     }
 
     function openUnban(id) {
-      const item = blacklists.find(record => record.id === id);
-      if (!item) return;
-      $("#unban-form").reset();
-      $("#form-unban-id").value = item.id;
-      $("#form-unban-value").value = formatEntitySummary(item);
-      $("#form-unban-scope").value = item.scope;
-      $("#form-unban-source").value = item.source;
-      $("#form-unban-reason-origin").value = item.reason;
-      openModal("unban-modal");
+      openMultiEntityUnban("activity", id);
     }
 
     function saveUnban() {
-      const id = Number($("#form-unban-id").value);
-      const reason = $("#form-unban-reason").value.trim();
-      if (!reason) {
-        showToast("请填写解封原因");
-        return;
-      }
-      const index = blacklists.findIndex(item => item.id === id);
-      if (index < 0) return;
-      const [item] = blacklists.splice(index, 1);
-      const unbanAt = nowText();
-      const records = item.entities.map(entity => ({
-        value: entity.value,
-        type: entity.type,
-        scope: item.scope,
-        source: item.source,
-        reason: item.reason,
-        duration: item.duration,
-        createdAt: item.createdAt,
-        unbanReason: reason,
-        unbanAt,
-        operator: "管理员"
-      }));
-      unbanRecords.unshift(...records);
-      closeModal("unban-modal");
-      renderBlacklists();
-      renderUnbanRecords();
-      showToast(`整条活动黑名单已解封，已生成 ${records.length} 条实体解封记录`);
+      saveSelectedUnban("activity");
     }
 
     function exportBlacklists() {
@@ -4613,6 +4745,14 @@
       if (confirmHandler) confirmHandler();
       confirmHandler = null;
       closeModal("confirm-modal");
+    });
+
+    ["activity", "login"].forEach(kind => {
+      const ui = getUnbanUi(kind);
+      ui.selectAll.addEventListener("change", () => setAllUnbanEntities(kind, ui.selectAll.checked));
+      ui.options.addEventListener("change", event => {
+        if (event.target.matches("input[data-unban-index]")) syncUnbanSelectAll(kind);
+      });
     });
 
     $("#strategy-submit").addEventListener("click", saveStrategy);
