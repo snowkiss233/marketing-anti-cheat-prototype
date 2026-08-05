@@ -645,6 +645,10 @@
       min-width: 1780px;
     }
 
+    table.strategy-table {
+      min-width: 1320px;
+    }
+
     th,
     td {
       padding: 17px 16px;
@@ -748,6 +752,14 @@
     .threshold {
       color: var(--blue);
       line-height: 1.6;
+      white-space: normal;
+    }
+
+    .strategy-tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-width: 130px;
       white-space: normal;
     }
 
@@ -1560,7 +1572,7 @@
 
           <div class="card table-card">
             <div class="table-wrap">
-              <table>
+              <table class="strategy-table">
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -1569,6 +1581,7 @@
                     <th>风控类型</th>
                     <th>阈值配置</th>
                     <th>处置动作</th>
+                    <th>封禁实体类型</th>
                     <th>状态</th>
                     <th>更新时间</th>
                     <th>操作人</th>
@@ -2274,7 +2287,7 @@
                   <select class="select metric" id="form-window-metric">
                     <option>总请求次数</option>
                     <option>去重用户数</option>
-                    <option>业务参数</option>
+                    <option>业务字段值</option>
                   </select>
                   <div class="metric-cascade" id="window-business-param-cascade" hidden>
                     <select class="select metric" id="form-window-business-param">
@@ -2299,7 +2312,7 @@
                   <select class="select metric" id="form-period-metric">
                     <option>总请求次数</option>
                     <option>去重用户数</option>
-                    <option>业务参数</option>
+                    <option>业务字段值</option>
                   </select>
                   <div class="metric-cascade" id="period-business-param-cascade" hidden>
                     <select class="select metric" id="form-period-business-param">
@@ -2758,11 +2771,11 @@
     };
 
     const strategies = [
-      { id: 1, name: "低频脚本兑换预警", scene: "权益兑换", type: "自动化行为", threshold: "同一用户ID + 设备标识在权益兑换接口连续 5 次请求，间隔稳定在 2.5 至 3.5 秒", actionLabel: "系统预警", actionTag: "tag-orange", action: "仅系统预警", status: "已启用", updatedAt: "2026-06-02 16:20:00", operator: "管理员", ruleType: "全局规则", mode: "behavior" },
-      { id: 2, name: "同设备极速连抽拦截", scene: "权益入账", type: "设备标识", threshold: "在每日 12:00:00 至 14:00:00 期间，计算去重用户数 > 5", action: "设备标识", status: "已启用", updatedAt: "2026-04-12 10:35:20", operator: "王小明", ruleType: "全局规则", mode: "period" },
-      { id: 3, name: "羊毛党黑产号段熔断", scene: "资格获取", type: "手机号段", threshold: "在 300 秒内，计算总请求次数 > 10", action: "手机号段", status: "已停用", updatedAt: "2026-04-11 09:12:15", operator: "李华", ruleType: "全局规则", mode: "window" },
-      { id: 4, name: "大额权益兑换异常预警", scene: "权益兑换", type: "用户ID", threshold: "在 3600 秒内，计算总请求次数 > 2", action: "用户ID、IP地址", status: "已启用", updatedAt: "2026-04-10 14:15:00", operator: "王小明", ruleType: "活动规则", mode: "window" },
-      { id: 5, name: "单IP大量领券防刷", scene: "权益入账", type: "IP地址", threshold: "在 86400 秒内，计算去重用户数 > 3", action: "IP地址", status: "已启用", updatedAt: "2026-04-09 16:30:22", operator: "李华", ruleType: "全局规则", mode: "window" }
+      { id: 1, name: "低频脚本兑换预警", scene: "权益兑换", type: "自动化行为", threshold: "同一用户ID + 设备标识在权益兑换接口连续 5 次请求，间隔稳定在 2.5 至 3.5 秒", disposalActions: ["系统预警", "拦截"], banEntityTypes: [], status: "已启用", updatedAt: "2026-06-02 16:20:00", operator: "管理员", ruleType: "全局规则", mode: "behavior" },
+      { id: 2, name: "同设备极速连抽拦截", scene: "权益入账", type: "设备标识", threshold: "在每日 12:00:00 至 14:00:00 期间，计算去重用户数 > 5", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["设备标识"], status: "已启用", updatedAt: "2026-04-12 10:35:20", operator: "王小明", ruleType: "全局规则", mode: "period" },
+      { id: 3, name: "羊毛党黑产号段熔断", scene: "资格获取", type: "手机号段", threshold: "在 300 秒内，计算总请求次数 > 10", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["手机号段"], status: "已停用", updatedAt: "2026-04-11 09:12:15", operator: "李华", ruleType: "全局规则", mode: "window" },
+      { id: 4, name: "大额权益兑换异常预警", scene: "权益兑换", type: "用户ID", threshold: "在 3600 秒内，计算总请求次数 > 2", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["用户ID", "IP地址"], status: "已启用", updatedAt: "2026-04-10 14:15:00", operator: "王小明", ruleType: "活动规则", mode: "window" },
+      { id: 5, name: "单IP大量领券防刷", scene: "权益入账", type: "IP地址", threshold: "在 86400 秒内，计算去重用户数 > 3", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["IP地址"], status: "已启用", updatedAt: "2026-04-09 16:30:22", operator: "李华", ruleType: "全局规则", mode: "window" }
     ];
 
     const rceConfig = {
@@ -3236,7 +3249,8 @@
           <td><span class="tag tag-orange">${escapeHtml(item.scene)}</span></td>
           <td>${escapeHtml(item.type)}</td>
           <td><div class="threshold">${escapeHtml(item.threshold)}</div></td>
-          <td><span class="tag ${escapeHtml(item.actionTag || "tag-red")}">${escapeHtml(item.actionLabel || "拦截并拉黑")}</span> ${escapeHtml(item.action)}</td>
+          <td><div class="strategy-tag-list">${item.disposalActions.map(action => `<span class="tag ${action === "系统预警" ? "tag-orange" : action === "拦截" ? "tag-red" : "tag-blue"}">${escapeHtml(action)}</span>`).join("")}</div></td>
+          <td><div class="strategy-tag-list">${item.banEntityTypes.length ? item.banEntityTypes.map(type => `<span class="tag tag-gray">${escapeHtml(type)}</span>`).join("") : "-"}</div></td>
           <td>${statusTag(item.status)}</td>
           <td>${escapeHtml(item.updatedAt)}</td>
           <td>${escapeHtml(item.operator)}</td>
@@ -3248,7 +3262,7 @@
             </div>
           </td>
         </tr>
-      `).join("") : `<tr><td colspan="10"><div class="empty">未查询到匹配的反作弊策略</div></td></tr>`;
+      `).join("") : `<tr><td colspan="11"><div class="empty">未查询到匹配的反作弊策略</div></td></tr>`;
       $("#strategy-count").textContent = `共 ${list.length} 条数据`;
     }
 
@@ -3538,15 +3552,15 @@
     }
 
     function syncBusinessMetricCascade(mode) {
-      const isBusinessMetric = $(`#form-${mode}-metric`).value === "业务参数";
+      const isBusinessMetric = $(`#form-${mode}-metric`).value === "业务字段值";
       $(`#${mode}-business-param-cascade`).hidden = !isBusinessMetric;
       if (!isBusinessMetric) closeCustomSelects();
     }
 
     function getThresholdMetricText(mode) {
       const metric = $(`#form-${mode}-metric`).value;
-      return metric === "业务参数"
-        ? `业务参数（${$(`#form-${mode}-business-param`).value}）`
+      return metric === "业务字段值"
+        ? `业务字段值（${$(`#form-${mode}-business-param`).value}）`
         : metric;
     }
 
@@ -3583,6 +3597,12 @@
       $("#form-scene").disabled = true;
       $("#form-status").value = item.status;
       $("#form-risk-type").disabled = true;
+      const blacklistEnabled = item.disposalActions.includes("加入黑名单");
+      $("#form-blacklist").checked = blacklistEnabled;
+      $("#blacklist-config").hidden = !blacklistEnabled;
+      $$("#entity-checks input").forEach(input => {
+        input.checked = item.banEntityTypes.includes(input.value);
+      });
       setAutomationMode(item.mode === "behavior");
       if (item.mode !== "behavior") setThresholdMode(item.mode || "window");
       syncCustomSelects();
@@ -3610,18 +3630,17 @@
         : mode === "period"
           ? `在每日 ${$("#form-start-time").value} 至 ${$("#form-end-time").value} 期间，计算${getThresholdMetricText("period")} ${$("#form-period-relation").value} ${$("#form-period-count").value}`
           : `同一${$("#form-behavior-entity").value}在权益兑换接口连续 ${$("#form-behavior-count").value} 次请求，间隔稳定在 ${$("#form-behavior-min").value} 至 ${$("#form-behavior-max").value} 秒`;
-      const actionLabel = blacklistEnabled ? "拦截并加入黑名单" : "拦截";
-      const actionTag = "tag-red";
-      const action = blacklistEnabled ? entities.join("、") : "仅拦截";
+      const disposalActions = ["系统预警", "拦截"];
+      if (blacklistEnabled) disposalActions.push("加入黑名单");
+      const banEntityTypes = blacklistEnabled ? entities : [];
       const data = {
         name,
         ruleType: $("#form-rule-type").value,
         scene: $("#form-scene").value,
         type: $("#form-risk-type").value,
         threshold,
-        actionLabel,
-        actionTag,
-        action,
+        disposalActions,
+        banEntityTypes,
         status: $("#form-status").value,
         updatedAt: nowText(),
         operator: "管理员",
