@@ -418,47 +418,6 @@
       grid-template-columns: 170px minmax(180px, 1fr) repeat(3, minmax(145px, 1fr)) auto auto auto;
     }
 
-    .filter-card.device-filter {
-      grid-template-columns: 210px 360px 96px 96px 96px;
-      justify-content: start;
-    }
-
-    .filter-card.device-unban-filter {
-      grid-template-columns: 210px 360px 96px 96px 96px;
-      justify-content: start;
-    }
-
-    .device-summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .device-summary-card {
-      padding: 18px 20px;
-    }
-
-    .device-summary-label {
-      margin-bottom: 10px;
-      color: #758398;
-      font-weight: 600;
-    }
-
-    .device-summary-value {
-      color: #202d3e;
-      font-size: 28px;
-      font-weight: 800;
-      line-height: 1;
-    }
-
-    .device-summary-note {
-      margin-top: 10px;
-      color: #8a98aa;
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
     .field label {
       display: block;
       margin-bottom: 8px;
@@ -684,18 +643,6 @@
 
     table.wide-table {
       min-width: 1780px;
-    }
-
-    table.hit-log-table {
-      min-width: 0;
-      table-layout: fixed;
-    }
-
-    table.hit-log-table th,
-    table.hit-log-table td {
-      padding: 14px 12px;
-      white-space: normal;
-      word-break: break-word;
     }
 
     th,
@@ -1275,7 +1222,16 @@
     }
 
     .inline-form .metric {
-      width: 155px;
+      width: 135px;
+    }
+
+    .inline-form .metric-cascade {
+      flex: 0 0 135px;
+      width: 135px;
+    }
+
+    .inline-form .metric-cascade[hidden] {
+      display: none;
     }
 
     .check-row {
@@ -1485,9 +1441,7 @@
       .filter-card.blacklist,
       .filter-card.login-blacklist-filter,
       .filter-card.login-unban-filter,
-      .filter-card.whitelist-filter,
-      .filter-card.device-filter,
-      .device-summary-grid {
+      .filter-card.whitelist-filter {
         grid-template-columns: repeat(2, minmax(160px, 1fr));
       }
 
@@ -1535,12 +1489,6 @@
           <svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.3-2.8 8.2-7 10-4.2-1.8-7-5.7-7-10V6l7-3Z"/><path d="m9 9 6 6"/><path d="m15 9-6 6"/></svg>
         </span>
         <span>多维登录黑名单</span>
-      </div>
-      <div class="nav-item" data-page="device-blacklist-page">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.3-2.8 8.2-7 10-4.2-1.8-7-5.7-7-10V6l7-3Z"/><path d="m9 9 6 6"/><path d="m15 9-6 6"/></svg>
-        </span>
-        <span>设备黑名单</span>
       </div>
       <div class="sidebar-footer">
         <div class="avatar">管</div>
@@ -2259,128 +2207,6 @@
           </div>
         </section>
 
-        <section class="page" id="device-blacklist-page">
-          <div class="page-heading">
-            <div>
-              <h1>设备黑名单管理</h1>
-              <p class="page-description">管理被判定为风险设备的 DeviceID。设备黑名单在登录、注册等账号入口前置校验，本期重点沉淀设备维度的封禁、处置和审计能力。</p>
-            </div>
-            <button class="btn btn-primary" id="device-blacklist-add-btn">
-              <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-              新增设备黑名单
-            </button>
-          </div>
-
-          <div class="tabs">
-            <button class="tab active" data-tab="device-blacklist-list">设备黑名单列表</button>
-            <button class="tab" data-tab="device-unban-list">解封记录</button>
-          </div>
-
-          <div class="tab-panel active" id="device-blacklist-list">
-            <div class="card filter-card device-filter">
-              <div class="field">
-                <label>处置策略</label>
-                <select class="select" id="device-filter-action">
-                  <option value="">全部策略</option>
-                  <option>仅拦截登录</option>
-                  <option>拦截并封禁账号</option>
-                </select>
-              </div>
-              <div class="field">
-                <label>设备ID</label>
-                <input class="input" id="device-filter-keyword" placeholder="请输入 DeviceID 精确或模糊查询">
-              </div>
-              <button class="btn btn-primary" id="device-search">查询</button>
-              <button class="btn" id="device-reset">重置</button>
-              <button class="btn" id="device-export">导出</button>
-            </div>
-
-            <div class="strategy-hint">命中口径：业务侧传入标准化后的 DeviceID，风控服务按 DeviceID 判断是否命中设备黑名单；本列表只展示封禁中的设备，已自动解封或手动解封的设备进入“解封记录”。</div>
-
-            <div class="card table-card">
-              <div class="table-wrap">
-                <table class="wide-table">
-                  <thead>
-                    <tr>
-                      <th>设备ID</th>
-                      <th>处置策略</th>
-                      <th>封禁时长</th>
-                      <th>封禁时间</th>
-                      <th>预计解封时间</th>
-                      <th>添加原因</th>
-                      <th>命中次数</th>
-                      <th>最近命中时间</th>
-                      <th>操作人</th>
-                      <th>操作时间</th>
-                      <th>操作</th>
-                    </tr>
-                  </thead>
-                  <tbody id="device-body"></tbody>
-                </table>
-              </div>
-              <div class="table-footer">
-                <span id="device-count"></span>
-                <div class="pagination">
-                  <button class="page-num">‹</button>
-                  <button class="page-num active">1</button>
-                  <button class="page-num">2</button>
-                  <button class="page-num">›</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="tab-panel" id="device-unban-list">
-            <div class="card filter-card device-unban-filter">
-              <div class="field">
-                <label>解封类型</label>
-                <select class="select" id="device-unban-filter-type">
-                  <option value="">全部类型</option>
-                  <option>手动解封</option>
-                  <option>到期自动解封</option>
-                </select>
-              </div>
-              <div class="field">
-                <label>设备ID</label>
-                <input class="input" id="device-unban-filter-keyword" placeholder="请输入 DeviceID 精确或模糊查询">
-              </div>
-              <button class="btn btn-primary" id="device-unban-search">查询</button>
-              <button class="btn" id="device-unban-reset">重置</button>
-              <button class="btn" id="device-unban-export">导出</button>
-            </div>
-
-            <div class="strategy-hint">解封记录展示已不再生效的设备黑名单，包括固定时长到期后的自动解封和运营手动解封，用于审计追溯。</div>
-            <div class="card table-card">
-              <div class="table-wrap">
-                <table class="wide-table">
-                  <thead>
-                    <tr>
-                      <th>设备ID</th>
-                      <th>原处置策略</th>
-                      <th>原封禁时长</th>
-                      <th>原封禁时间</th>
-                      <th>原预计解封时间</th>
-                      <th>解封类型</th>
-                      <th>解封时间</th>
-                      <th>解封原因</th>
-                      <th>操作人</th>
-                    </tr>
-                  </thead>
-                  <tbody id="device-unban-body"></tbody>
-                </table>
-              </div>
-              <div class="table-footer">
-                <span id="device-unban-count"></span>
-                <div class="pagination">
-                  <button class="page-num">‹</button>
-                  <button class="page-num active">1</button>
-                  <button class="page-num">2</button>
-                  <button class="page-num">›</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </div>
     </main>
   </div>
@@ -2448,7 +2274,13 @@
                   <select class="select metric" id="form-window-metric">
                     <option>总请求次数</option>
                     <option>去重用户数</option>
+                    <option>业务参数</option>
                   </select>
+                  <div class="metric-cascade" id="window-business-param-cascade" hidden>
+                    <select class="select metric" id="form-window-business-param">
+                      <option>LOL gameid</option>
+                    </select>
+                  </div>
                   <select class="select" id="form-window-relation">
                     <option>大于</option>
                     <option>大于等于</option>
@@ -2467,7 +2299,13 @@
                   <select class="select metric" id="form-period-metric">
                     <option>总请求次数</option>
                     <option>去重用户数</option>
+                    <option>业务参数</option>
                   </select>
+                  <div class="metric-cascade" id="period-business-param-cascade" hidden>
+                    <select class="select metric" id="form-period-business-param">
+                      <option>LOL gameid</option>
+                    </select>
+                  </div>
                   <select class="select" id="form-period-relation">
                     <option>大于</option>
                     <option>大于等于</option>
@@ -2514,6 +2352,13 @@
               <span>
                 <span class="check-title">系统预警 <span class="locked">系统必选项</span></span>
                 <div class="check-note">触发策略后通过企微 Bot 推送预警消息。</div>
+              </span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="form-block-request" checked disabled>
+              <span>
+                <span class="check-title">拦截 <span class="locked">系统必选项</span></span>
+                <div class="check-note">触发策略后拦截当前业务请求。</div>
               </span>
             </label>
             <label class="check-row">
@@ -2685,65 +2530,6 @@
     </div>
   </div>
 
-  <div class="modal-mask" id="device-blacklist-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title" id="device-blacklist-modal-title">新增设备黑名单</h2>
-        <button class="close" data-close="device-blacklist-modal">×</button>
-      </div>
-      <div class="modal-body">
-        <form id="device-blacklist-form">
-          <input type="hidden" id="device-edit-id">
-          <div class="form-section">
-            <h3 class="section-title">基础信息</h3>
-            <div class="form-grid">
-              <div class="field">
-                <label class="required">设备ID（支持批量）</label>
-                <textarea class="textarea" id="form-device-id" maxlength="8000" placeholder="请输入标准化后的 DeviceID，多个用英文逗号或换行分隔"></textarea>
-                <span class="info-tip">支持英文逗号或换行分隔，一次最多 100 个；所有设备共用同一处置策略、封禁时长和添加原因。</span>
-                <div class="batch-result" id="device-batch-result" hidden></div>
-              </div>
-              <div class="field">
-                <label class="required">处置策略</label>
-                <select class="select" id="form-device-action">
-                  <option>仅拦截登录</option>
-                  <option>拦截并封禁账号</option>
-                </select>
-              </div>
-              <div class="field">
-                <label class="required">封禁时长</label>
-                <select class="select" id="form-device-duration">
-                  <option value="">请选择时长</option>
-                  <option>3日</option>
-                  <option>10日</option>
-                  <option>15日</option>
-                  <option>30日</option>
-                  <option>60日</option>
-                  <option>90日</option>
-                  <option>永久</option>
-                </select>
-                <span class="info-tip">封禁时间默认为保存时间；选择永久时不生成预计解封时间。</span>
-              </div>
-            </div>
-          </div>
-          <div class="form-section">
-            <h3 class="section-title">原因说明</h3>
-            <div class="form-grid single">
-              <div class="field">
-                <label class="required">添加原因</label>
-                <textarea class="textarea" id="form-device-reason" maxlength="200" placeholder="请输入加入设备黑名单的原因，例如：异常批量注册设备、作弊设备复用等"></textarea>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" data-close="device-blacklist-modal">取消</button>
-        <button class="btn btn-primary" id="device-submit">保存</button>
-      </div>
-    </div>
-  </div>
-
   <div class="modal-mask" id="login-unban-modal">
     <div class="modal small">
       <div class="modal-header">
@@ -2788,68 +2574,6 @@
       <div class="modal-footer">
         <button class="btn btn-ghost" data-close="login-unban-modal">取消</button>
         <button class="btn btn-primary" id="login-unban-submit">确认解封</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-mask" id="device-hit-log-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title">设备命中日志</h2>
-        <button class="close" data-close="device-hit-log-modal">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="strategy-hint" id="device-hit-log-title" style="margin-bottom: 16px;"></div>
-        <div class="table-wrap">
-          <table class="hit-log-table">
-            <thead>
-              <tr>
-                <th>登录时间</th>
-                <th>UID</th>
-                <th>NN号</th>
-                <th>手机号</th>
-                <th>登录IP</th>
-                <th>命中动作</th>
-              </tr>
-            </thead>
-            <tbody id="device-hit-log-body"></tbody>
-          </table>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" data-close="device-hit-log-modal">关闭</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-mask" id="device-unban-modal">
-    <div class="modal small">
-      <div class="modal-header">
-        <h2 class="modal-title">设备解封确认</h2>
-        <button class="close" data-close="device-unban-modal">×</button>
-      </div>
-      <div class="modal-body">
-        <form id="device-unban-form">
-          <input type="hidden" id="form-device-unban-id">
-          <div class="form-grid single">
-            <div class="field">
-              <label>待解封设备</label>
-              <input class="input" id="form-device-unban-value" disabled>
-            </div>
-            <div class="field">
-              <label>原处置策略</label>
-              <input class="input" id="form-device-unban-action" disabled>
-            </div>
-            <div class="field">
-              <label class="required">解封原因</label>
-              <textarea class="textarea" id="form-device-unban-reason" maxlength="200" placeholder="请输入解封原因，用于审计追溯"></textarea>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" data-close="device-unban-modal">取消</button>
-        <button class="btn btn-danger" id="device-unban-submit">确认解封</button>
       </div>
     </div>
   </div>
@@ -3271,30 +2995,6 @@
       }
     ];
 
-    const deviceBlacklists = [
-      { id: 1, deviceId: "DEV-5F8A9C1D2E3B4A6F", status: "封禁中", action: "仅拦截登录", duration: "永久", effectiveAt: "2026-06-01 10:00:00", expireAt: "永久", reason: "多账号共用同一设备参与活动，命中异常注册风险", hitCount: 36, lastHitAt: "2026-06-16 09:42:18", creator: "张三", createdAt: "2026-06-01 10:00:00", updater: "张三", updatedAt: "2026-06-01 10:00:00" },
-      { id: 2, deviceId: "DEV-9B7C2F4E6A8D1C0B", status: "封禁中", action: "拦截并封禁账号", duration: "30日", effectiveAt: "2026-06-08 14:30:00", expireAt: "2026-07-08 14:30:00", reason: "同设备批量登录多个低龄账号参与权益兑换", hitCount: 18, lastHitAt: "2026-06-15 22:13:07", creator: "李梅", createdAt: "2026-06-08 14:30:00", updater: "李梅", updatedAt: "2026-06-08 14:30:00" },
-      { id: 3, deviceId: "DEV-2D4E6F8A0B1C3D5E", status: "已解封", action: "仅拦截登录", duration: "30日", effectiveAt: "2026-05-20 09:00:00", expireAt: "2026-06-20 09:00:00", reason: "申诉复核后确认为正常设备，已手动解封保留审计记录", hitCount: 0, lastHitAt: "2026-06-02 11:21:33", creator: "王小明", createdAt: "2026-05-20 09:00:00", updater: "王小明", updatedAt: "2026-06-10 16:18:00" },
-      { id: 4, deviceId: "DEV-7E1A3C5B9D0F2A4C", status: "已过期", action: "拦截并封禁账号", duration: "30日", effectiveAt: "2026-05-01 00:00:00", expireAt: "2026-06-01 00:00:00", reason: "阶段性活动风险设备，封禁周期到期后自动失效", hitCount: 0, lastHitAt: "2026-05-30 18:46:10", creator: "系统自动", createdAt: "2026-05-01 00:00:00", updater: "系统自动", updatedAt: "2026-06-01 00:00:00" }
-    ];
-
-    const deviceUnbanRecords = [
-      { deviceId: "DEV-2D4E6F8A0B1C3D5E", action: "仅拦截登录", duration: "30日", effectiveAt: "2026-05-20 09:00:00", expireAt: "2026-06-20 09:00:00", unbanType: "手动解封", unbanAt: "2026-06-10 16:18:00", unbanReason: "申诉复核后确认为正常设备", operator: "王小明" },
-      { deviceId: "DEV-7E1A3C5B9D0F2A4C", action: "拦截并封禁账号", duration: "30日", effectiveAt: "2026-05-01 00:00:00", expireAt: "2026-06-01 00:00:00", unbanType: "到期自动解封", unbanAt: "2026-06-01 00:00:00", unbanReason: "封禁时长到期，系统自动解封", operator: "系统自动" }
-    ];
-
-    const deviceHitLogs = {
-      "DEV-5F8A9C1D2E3B4A6F": [
-        { loginAt: "2026-06-16 09:42:18", uid: "195986240", nn: "8654321", phone: "138****4321", ip: "182.245.153.5", action: "登录拦截" },
-        { loginAt: "2026-06-15 22:18:39", uid: "170001708", nn: "5689231", phone: "137****7788", ip: "112.28.217.37", action: "登录拦截" },
-        { loginAt: "2026-06-15 21:54:07", uid: "212416480", nn: "9921834", phone: "159****1102", ip: "39.182.29.57", action: "登录拦截" }
-      ],
-      "DEV-9B7C2F4E6A8D1C0B": [
-        { loginAt: "2026-06-15 22:13:07", uid: "212416480", nn: "9921834", phone: "159****1102", ip: "182.45.242.38", action: "登录拦截并触发账号封禁" },
-        { loginAt: "2026-06-14 19:35:21", uid: "170001708", nn: "5689231", phone: "137****7788", ip: "182.112.35.69", action: "登录拦截并触发账号封禁" }
-      ]
-    };
-
     const whitelists = [
       { id: "WL20260601001", status: "生效中", type: "UID", value: "10098231", remark: "运营保障账号，避免活动压测期间被误拦", creator: "张三", createdAt: "2026-06-01 10:12:34", remover: "-", removedAt: "-", removeReason: "-" },
       { id: "WL20260603002", status: "生效中", type: "手机号段", value: "1384342****", remark: "内部测试手机号段，用于 PUBG 活动联调", creator: "李梅", createdAt: "2026-06-03 09:18:20", remover: "-", removedAt: "-", removeReason: "-" },
@@ -3659,293 +3359,6 @@
       $("#login-unban-count").textContent = `共 ${list.length} 条记录`;
     }
 
-    function deviceStatusTag(status) {
-      const type = status === "封禁中" ? "tag-red" : status === "已过期" ? "tag-orange" : status === "已解封" ? "tag-green" : "tag-gray";
-      return `<span class="tag ${type} tag-dot">${escapeHtml(status)}</span>`;
-    }
-
-    function deviceActionTag(action) {
-      const type = action === "拦截并封禁账号" ? "tag-orange" : "tag-blue";
-      return `<span class="tag ${type}">${escapeHtml(action)}</span>`;
-    }
-
-    function formatDateTime(date) {
-      const pad = n => String(n).padStart(2, "0");
-      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-    }
-
-    function calculateDeviceExpireAt(startAt, duration) {
-      if (duration === "永久") return "永久";
-      const days = Number.parseInt(duration, 10);
-      const start = new Date(startAt.replace(" ", "T"));
-      if (!days || Number.isNaN(start.getTime())) return "-";
-      start.setDate(start.getDate() + days);
-      return formatDateTime(start);
-    }
-
-    function getActiveDeviceBlacklists() {
-      const action = $("#device-filter-action").value;
-      const keyword = $("#device-filter-keyword").value.trim().toLowerCase();
-      return deviceBlacklists.filter(item =>
-        item.status === "封禁中" &&
-        (!action || item.action === action) &&
-        (!keyword || item.deviceId.toLowerCase().includes(keyword))
-      );
-    }
-
-    function renderDeviceBlacklists() {
-      const list = getActiveDeviceBlacklists();
-
-      $("#device-body").innerHTML = list.length ? list.map(item => `
-        <tr>
-          <td><strong>${escapeHtml(item.deviceId)}</strong></td>
-          <td>${deviceActionTag(item.action)}</td>
-          <td>${escapeHtml(item.duration)}</td>
-          <td>${escapeHtml(item.effectiveAt)}</td>
-          <td>${escapeHtml(item.expireAt)}</td>
-          <td><div class="text-wrap">${escapeHtml(item.reason)}</div></td>
-          <td>${escapeHtml(item.hitCount)}</td>
-          <td>${escapeHtml(item.lastHitAt || "-")}</td>
-          <td>${escapeHtml(item.updater)}</td>
-          <td>${escapeHtml(item.updatedAt)}</td>
-          <td>
-            <div class="actions">
-              <button class="action-link" data-action="device-hit-log" data-id="${item.id}">命中日志</button>
-              <button class="action-link danger" data-action="unban-device" data-id="${item.id}">解封</button>
-            </div>
-          </td>
-        </tr>
-      `).join("") : `<tr><td colspan="11"><div class="empty">未查询到封禁中的设备黑名单记录</div></td></tr>`;
-      $("#device-count").textContent = `共 ${list.length} 条记录`;
-    }
-
-    function getFilteredDeviceUnbanRecords() {
-      const type = $("#device-unban-filter-type").value;
-      const keyword = $("#device-unban-filter-keyword").value.trim().toLowerCase();
-      return deviceUnbanRecords.filter(item =>
-        (!type || item.unbanType === type) &&
-        (!keyword || item.deviceId.toLowerCase().includes(keyword))
-      );
-    }
-
-    function renderDeviceUnbanRecords() {
-      const list = getFilteredDeviceUnbanRecords();
-      $("#device-unban-body").innerHTML = list.length ? list.map(item => `
-        <tr>
-          <td><strong>${escapeHtml(item.deviceId)}</strong></td>
-          <td>${deviceActionTag(item.action)}</td>
-          <td>${escapeHtml(item.duration)}</td>
-          <td>${escapeHtml(item.effectiveAt)}</td>
-          <td>${escapeHtml(item.expireAt)}</td>
-          <td>${escapeHtml(item.unbanType)}</td>
-          <td>${escapeHtml(item.unbanAt)}</td>
-          <td><div class="text-wrap">${escapeHtml(item.unbanReason)}</div></td>
-          <td>${escapeHtml(item.operator)}</td>
-        </tr>
-      `).join("") : `<tr><td colspan="9"><div class="empty">暂无设备解封记录</div></td></tr>`;
-      $("#device-unban-count").textContent = `共 ${list.length} 条记录`;
-    }
-
-    function resetDeviceBlacklistForm() {
-      $("#device-blacklist-form").reset();
-      $("#device-edit-id").value = "";
-      $("#device-blacklist-modal-title").textContent = "新增设备黑名单";
-      $("#form-device-id").disabled = false;
-      $("#form-device-duration").value = "";
-      clearDeviceBatchResult();
-      syncCustomSelects();
-    }
-
-    function parseDeviceIds(value) {
-      return value
-        .split(/[\n,，]+/)
-        .map(item => item.trim())
-        .filter(Boolean);
-    }
-
-    function clearDeviceBatchResult() {
-      const result = $("#device-batch-result");
-      result.hidden = true;
-      result.innerHTML = "";
-    }
-
-    function showDeviceBatchResult(message, failures) {
-      const result = $("#device-batch-result");
-      result.hidden = false;
-      result.innerHTML = `
-        <strong>${escapeHtml(message)}</strong>
-        ${failures.length ? `<ul>${failures.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : ""}
-      `;
-    }
-
-    function validateDeviceIds(deviceIds, editId) {
-      const failures = [];
-      const seen = new Set();
-      const activeIds = new Set(deviceBlacklists
-        .filter(item => item.status === "封禁中" && String(item.id) !== editId)
-        .map(item => item.deviceId.toUpperCase()));
-
-      deviceIds.forEach((deviceId, index) => {
-        const normalized = deviceId.toUpperCase();
-        if (!/^[A-Za-z0-9_-]{6,80}$/.test(deviceId)) {
-          failures.push(`第 ${index + 1} 个设备ID“${deviceId}”格式异常，仅支持 6-80 位字母、数字、下划线或中划线`);
-        } else if (seen.has(normalized)) {
-          failures.push(`设备ID“${deviceId}”在本次输入中重复`);
-        } else if (activeIds.has(normalized)) {
-          failures.push(`设备ID“${deviceId}”已存在封禁中的黑名单记录`);
-        }
-        seen.add(normalized);
-      });
-
-      return failures;
-    }
-
-    function saveDeviceBlacklist() {
-      const editId = $("#device-edit-id").value;
-      const deviceIds = parseDeviceIds($("#form-device-id").value);
-      const duration = $("#form-device-duration").value;
-      const reason = $("#form-device-reason").value.trim();
-
-      clearDeviceBatchResult();
-
-      if (!deviceIds.length || !duration || !reason) {
-        showToast("请完整填写设备黑名单信息");
-        return;
-      }
-
-      if (deviceIds.length > 100) {
-        showDeviceBatchResult("本次输入超过数量上限", [`当前共 ${deviceIds.length} 个设备ID，一次最多支持 100 个`]);
-        return;
-      }
-
-      if (editId) {
-        if (deviceIds.length > 1) {
-          showDeviceBatchResult("编辑场景不支持批量修改", ["如需批量新增，请通过“新增设备黑名单”入口操作"]);
-          return;
-        }
-        const failures = validateDeviceIds(deviceIds, editId);
-        if (failures.length) {
-          showDeviceBatchResult("设备ID校验失败，本次未保存", failures);
-          return;
-        }
-        const item = deviceBlacklists.find(record => record.id === Number(editId));
-        if (!item) return;
-        item.status = "封禁中";
-        item.deviceId = deviceIds[0];
-        item.action = $("#form-device-action").value;
-        item.duration = duration;
-        item.expireAt = calculateDeviceExpireAt(item.effectiveAt, duration);
-        item.reason = reason;
-        item.updater = "管理员";
-        item.updatedAt = nowText();
-        showToast("设备黑名单已更新");
-      } else {
-        const failures = validateDeviceIds(deviceIds, editId);
-        if (failures.length) {
-          showDeviceBatchResult("设备ID校验失败，本次未保存", failures);
-          return;
-        }
-
-        const effectiveAt = nowText();
-        const nextId = Math.max(...deviceBlacklists.map(item => item.id), 0) + 1;
-        const records = deviceIds.map((deviceId, index) => ({
-          id: nextId + index,
-          deviceId,
-          status: "封禁中",
-          action: $("#form-device-action").value,
-          duration,
-          effectiveAt,
-          expireAt: calculateDeviceExpireAt(effectiveAt, duration),
-          reason,
-          hitCount: 0,
-          lastHitAt: "-",
-          creator: "管理员",
-          createdAt: effectiveAt,
-          updater: "管理员",
-          updatedAt: effectiveAt
-        }));
-        deviceBlacklists.unshift(...records);
-        showToast(deviceIds.length === 1 ? "设备黑名单已新增" : `已批量新增 ${deviceIds.length} 个设备黑名单`);
-      }
-
-      closeModal("device-blacklist-modal");
-      renderDeviceBlacklists();
-    }
-
-    function openDeviceHitLogs(id) {
-      const item = deviceBlacklists.find(record => record.id === Number(id));
-      if (!item) return;
-      const logs = deviceHitLogs[item.deviceId] || [];
-      $("#device-hit-log-title").textContent = `设备ID：${item.deviceId}，共 ${logs.length} 条登录命中记录`;
-      $("#device-hit-log-body").innerHTML = logs.length ? logs.map(log => `
-        <tr>
-          <td>${escapeHtml(log.loginAt)}</td>
-          <td><strong>${escapeHtml(log.uid)}</strong></td>
-          <td>${escapeHtml(log.nn)}</td>
-          <td>${escapeHtml(log.phone)}</td>
-          <td>${escapeHtml(log.ip)}</td>
-          <td>${escapeHtml(log.action)}</td>
-        </tr>
-      `).join("") : `<tr><td colspan="6"><div class="empty">暂无该设备的登录命中日志</div></td></tr>`;
-      openModal("device-hit-log-modal");
-    }
-
-    function openDeviceUnban(id) {
-      const item = deviceBlacklists.find(record => record.id === Number(id));
-      if (!item || item.status !== "封禁中") return;
-      $("#device-unban-form").reset();
-      $("#form-device-unban-id").value = item.id;
-      $("#form-device-unban-value").value = item.deviceId;
-      $("#form-device-unban-action").value = item.action;
-      openModal("device-unban-modal");
-    }
-
-    function saveDeviceUnban() {
-      const id = Number($("#form-device-unban-id").value);
-      const reason = $("#form-device-unban-reason").value.trim();
-      if (!reason) {
-        showToast("请填写设备解封原因");
-        return;
-      }
-      const item = deviceBlacklists.find(record => record.id === id);
-      if (!item) return;
-      const unbanAt = nowText();
-      item.status = "已解封";
-      item.updater = "管理员";
-      item.updatedAt = unbanAt;
-      deviceUnbanRecords.unshift({
-        deviceId: item.deviceId,
-        action: item.action,
-        duration: item.duration,
-        effectiveAt: item.effectiveAt,
-        expireAt: item.expireAt,
-        unbanType: "手动解封",
-        unbanAt,
-        unbanReason: reason,
-        operator: "管理员"
-      });
-      closeModal("device-unban-modal");
-      renderDeviceBlacklists();
-      renderDeviceUnbanRecords();
-      showToast("设备已解封，记录已写入解封记录");
-    }
-
-    function exportDeviceBlacklists() {
-      const rows = [
-        ["设备ID", "处置策略", "封禁时长", "封禁时间", "预计解封时间", "添加原因", "命中次数", "最近命中时间", "操作人", "操作时间"],
-        ...getActiveDeviceBlacklists().map(item => [item.deviceId, item.action, item.duration, item.effectiveAt, item.expireAt, item.reason, item.hitCount, item.lastHitAt, item.updater, item.updatedAt])
-      ];
-      downloadCsv("设备黑名单明细", rows);
-    }
-
-    function exportDeviceUnbanRecords() {
-      const rows = [
-        ["设备ID", "原处置策略", "原封禁时长", "原封禁时间", "原预计解封时间", "解封类型", "解封时间", "解封原因", "操作人"],
-        ...getFilteredDeviceUnbanRecords().map(item => [item.deviceId, item.action, item.duration, item.effectiveAt, item.expireAt, item.unbanType, item.unbanAt, item.unbanReason, item.operator])
-      ];
-      downloadCsv("设备解封记录", rows);
-    }
-
     function renderWhitelists() {
       const keyword = $("#whitelist-keyword").value.trim().toLowerCase();
       const type = $("#whitelist-type").value;
@@ -4124,6 +3537,19 @@
       $("#period-fields").hidden = mode !== "period";
     }
 
+    function syncBusinessMetricCascade(mode) {
+      const isBusinessMetric = $(`#form-${mode}-metric`).value === "业务参数";
+      $(`#${mode}-business-param-cascade`).hidden = !isBusinessMetric;
+      if (!isBusinessMetric) closeCustomSelects();
+    }
+
+    function getThresholdMetricText(mode) {
+      const metric = $(`#form-${mode}-metric`).value;
+      return metric === "业务参数"
+        ? `业务参数（${$(`#form-${mode}-business-param`).value}）`
+        : metric;
+    }
+
     function setAutomationMode(enabled) {
       $("#threshold-basic-config").hidden = enabled;
       $("#automation-config").hidden = !enabled;
@@ -4138,6 +3564,8 @@
       $("#form-risk-type").disabled = false;
       setThresholdMode("window");
       setAutomationMode(false);
+      syncBusinessMetricCascade("window");
+      syncBusinessMetricCascade("period");
       $("#blacklist-config").hidden = false;
       syncCustomSelects();
     }
@@ -4178,13 +3606,13 @@
       const automationMode = !$("#automation-config").hidden;
       const mode = automationMode ? "behavior" : $("[data-threshold].active").dataset.threshold;
       const threshold = mode === "window"
-        ? `在 ${$("#form-window").value} 秒内，计算${$("#form-window-metric").value} ${$("#form-window-relation").value} ${$("#form-window-count").value}`
+        ? `在 ${$("#form-window").value} 秒内，计算${getThresholdMetricText("window")} ${$("#form-window-relation").value} ${$("#form-window-count").value}`
         : mode === "period"
-          ? `在每日 ${$("#form-start-time").value} 至 ${$("#form-end-time").value} 期间，计算${$("#form-period-metric").value} ${$("#form-period-relation").value} ${$("#form-period-count").value}`
+          ? `在每日 ${$("#form-start-time").value} 至 ${$("#form-end-time").value} 期间，计算${getThresholdMetricText("period")} ${$("#form-period-relation").value} ${$("#form-period-count").value}`
           : `同一${$("#form-behavior-entity").value}在权益兑换接口连续 ${$("#form-behavior-count").value} 次请求，间隔稳定在 ${$("#form-behavior-min").value} 至 ${$("#form-behavior-max").value} 秒`;
-      const actionLabel = blacklistEnabled ? "加入黑名单" : "系统预警";
+      const actionLabel = blacklistEnabled ? "拦截并加入黑名单" : "拦截";
       const actionTag = "tag-red";
-      const action = blacklistEnabled ? entities.join("、") : "仅系统预警";
+      const action = blacklistEnabled ? entities.join("、") : "仅拦截";
       const data = {
         name,
         ruleType: $("#form-rule-type").value,
@@ -4382,11 +3810,6 @@
           )
         )) {
           failures.push(`${position}：该${entity.type}已存在于生效中的${kind === "activity" ? "活动" : "登录"}黑名单记录`);
-        }
-        if (kind === "login" && entity.type === "设备ID" && deviceBlacklists.some(item =>
-          item.status === "封禁中" && item.deviceId.toLowerCase() === entity.value.toLowerCase()
-        )) {
-          failures.push(`${position}：该设备ID已在设备黑名单中封禁，请勿重复添加`);
         }
       });
       return failures;
@@ -4667,8 +4090,7 @@
         "strategy-page": "/ 反作弊策略管理",
         "risk-tag-page": "/ 风控标签记录",
         "blacklist-page": "/ 多维活动黑名单管理",
-        "login-blacklist-page": "/ 多维登录黑名单管理",
-        "device-blacklist-page": "/ 设备黑名单管理"
+        "login-blacklist-page": "/ 多维登录黑名单管理"
       };
       if (item.dataset.page === "strategy-page" && $(".strategy-tab.active")?.dataset.strategyTab === "rce-config-panel") {
         $("#breadcrumb").textContent = "/ 反作弊策略管理 / RCE 配置";
@@ -4724,6 +4146,12 @@
     $$("[data-threshold]").forEach(button => button.addEventListener("click", () => {
       setThresholdMode(button.dataset.threshold);
     }));
+
+    ["window", "period"].forEach(mode => {
+      $(`#form-${mode}-metric`).addEventListener("change", () => {
+        syncBusinessMetricCascade(mode);
+      });
+    });
 
     $("#form-risk-type").addEventListener("change", event => {
       const isAutomation = event.target.value === "自动化行为";
@@ -4829,20 +4257,6 @@
       if (button.dataset.action === "risk-tag-clear") openRiskTagClear(button.dataset.id);
     });
 
-    $("#device-body").addEventListener("click", event => {
-      const button = event.target.closest("[data-action]");
-      if (!button) return;
-      const item = deviceBlacklists.find(record => record.id === Number(button.dataset.id));
-      if (!item) return;
-
-      if (button.dataset.action === "device-hit-log") {
-        openDeviceHitLogs(item.id);
-      }
-      if (button.dataset.action === "unban-device") {
-        openDeviceUnban(item.id);
-      }
-    });
-
     $("#confirm-submit").addEventListener("click", () => {
       if (confirmHandler) confirmHandler();
       confirmHandler = null;
@@ -4866,13 +4280,6 @@
     $("#whitelist-submit").addEventListener("click", saveWhitelist);
     $("#whitelist-remove-submit").addEventListener("click", saveWhitelistRemove);
     $("#risk-tag-clear-submit").addEventListener("click", saveRiskTagClear);
-    $("#device-submit").addEventListener("click", saveDeviceBlacklist);
-    $("#device-unban-submit").addEventListener("click", saveDeviceUnban);
-    $("#form-device-id").addEventListener("input", clearDeviceBatchResult);
-    $("#device-blacklist-add-btn").addEventListener("click", () => {
-      resetDeviceBlacklistForm();
-      openModal("device-blacklist-modal");
-    });
     $("#strategy-search").addEventListener("click", renderStrategies);
     $("#blacklist-search").addEventListener("click", renderBlacklists);
     $("#unban-search").addEventListener("click", renderUnbanRecords);
@@ -4880,14 +4287,10 @@
     $("#login-unban-search").addEventListener("click", renderLoginUnbanRecords);
     $("#whitelist-search").addEventListener("click", renderWhitelists);
     $("#risk-tag-search").addEventListener("click", renderRiskTags);
-    $("#device-search").addEventListener("click", renderDeviceBlacklists);
-    $("#device-unban-search").addEventListener("click", renderDeviceUnbanRecords);
     $("#blacklist-export").addEventListener("click", exportBlacklists);
     $("#login-blacklist-export").addEventListener("click", exportLoginBlacklists);
     $("#whitelist-export").addEventListener("click", exportWhitelists);
     $("#risk-tag-export").addEventListener("click", exportRiskTags);
-    $("#device-export").addEventListener("click", exportDeviceBlacklists);
-    $("#device-unban-export").addEventListener("click", exportDeviceUnbanRecords);
 
     $("#strategy-reset").addEventListener("click", () => {
       $("#strategy-keyword").value = "";
@@ -4948,20 +4351,6 @@
       renderRiskTags();
     });
 
-    $("#device-reset").addEventListener("click", () => {
-      $("#device-filter-action").value = "";
-      $("#device-filter-keyword").value = "";
-      syncCustomSelects();
-      renderDeviceBlacklists();
-    });
-
-    $("#device-unban-reset").addEventListener("click", () => {
-      $("#device-unban-filter-type").value = "";
-      $("#device-unban-filter-keyword").value = "";
-      syncCustomSelects();
-      renderDeviceUnbanRecords();
-    });
-
     renderStrategies();
     renderRceConfig();
     renderBlacklists();
@@ -4970,8 +4359,6 @@
     renderLoginUnbanRecords();
     renderWhitelists();
     renderRiskTags();
-    renderDeviceBlacklists();
-    renderDeviceUnbanRecords();
     enhanceSelects();
     syncCustomSelects();
   </script>
