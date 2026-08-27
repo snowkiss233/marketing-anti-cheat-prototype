@@ -2342,16 +2342,19 @@
                 <div class="inline-form">
                   <span>将</span>
                   <select class="select metric" id="form-compare-left-field">
+                    <option value="" selected disabled>请选择</option>
                     <option>下单请求IP</option>
                     <option>支付请求IP</option>
                   </select>
                   <span>与</span>
                   <select class="select metric" id="form-compare-right-field">
+                    <option value="" selected disabled>请选择</option>
                     <option>下单请求IP</option>
-                    <option selected>支付请求IP</option>
+                    <option>支付请求IP</option>
                   </select>
                   <span>按</span>
                   <select class="select" id="form-compare-dimension">
+                    <option value="" selected disabled>请选择</option>
                     <option>地级市</option>
                   </select>
                   <span>进行对比，结果</span>
@@ -3603,17 +3606,17 @@
       const leftSelect = $("#form-compare-left-field");
       const rightSelect = $("#form-compare-right-field");
 
-      if (leftSelect.value === rightSelect.value) {
+      if (leftSelect.value && leftSelect.value === rightSelect.value) {
         const targetSelect = changedSide === "right" ? leftSelect : rightSelect;
-        const alternative = [...targetSelect.options].find(option => option.value !== leftSelect.value);
+        const alternative = [...targetSelect.options].find(option => option.value && option.value !== leftSelect.value);
         if (alternative) targetSelect.value = alternative.value;
       }
 
       [...leftSelect.options].forEach(option => {
-        option.disabled = option.value === rightSelect.value;
+        option.disabled = !option.value || Boolean(rightSelect.value && option.value === rightSelect.value);
       });
       [...rightSelect.options].forEach(option => {
-        option.disabled = option.value === leftSelect.value;
+        option.disabled = !option.value || Boolean(leftSelect.value && option.value === leftSelect.value);
       });
     }
 
@@ -3667,9 +3670,9 @@
       $("#form-judgment-type").value = judgmentType;
       const compareConfig = item.compareConfig || {};
       const compareFieldValues = ["下单请求IP", "支付请求IP"];
-      $("#form-compare-left-field").value = compareFieldValues.includes(compareConfig.leftField) ? compareConfig.leftField : "下单请求IP";
-      $("#form-compare-right-field").value = compareFieldValues.includes(compareConfig.rightField) ? compareConfig.rightField : "支付请求IP";
-      $("#form-compare-dimension").value = "地级市";
+      $("#form-compare-left-field").value = compareFieldValues.includes(compareConfig.leftField) ? compareConfig.leftField : "";
+      $("#form-compare-right-field").value = compareFieldValues.includes(compareConfig.rightField) ? compareConfig.rightField : "";
+      $("#form-compare-dimension").value = compareConfig.dimension === "地级市" ? "地级市" : "";
       $("#form-compare-relation").value = compareConfig.relation || "不相等";
       syncCompareFieldOptions();
       $("#form-scene").disabled = true;
@@ -3703,6 +3706,10 @@
 
       const editId = Number($("#strategy-edit-id").value);
       const judgmentType = $("#form-judgment-type").value;
+      if (judgmentType === "compare" && (!$("#form-compare-left-field").value || !$("#form-compare-right-field").value || !$("#form-compare-dimension").value)) {
+        showToast("请完整选择业务字段对比条件");
+        return;
+      }
       if (judgmentType === "compare" && $("#form-compare-left-field").value === $("#form-compare-right-field").value) {
         showToast("左右对比字段不能相同");
         return;
