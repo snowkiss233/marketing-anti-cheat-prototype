@@ -2342,19 +2342,17 @@
                 <div class="inline-form">
                   <span>将</span>
                   <select class="select metric" id="form-compare-left-field">
-                    <option>扫码设备IP</option>
-                    <option>请求IP</option>
+                    <option>下单请求IP</option>
+                    <option>支付请求IP</option>
                   </select>
                   <span>与</span>
                   <select class="select metric" id="form-compare-right-field">
-                    <option>下单网页IP</option>
-                    <option>订单创建IP</option>
+                    <option>下单请求IP</option>
+                    <option selected>支付请求IP</option>
                   </select>
                   <span>按</span>
                   <select class="select" id="form-compare-dimension">
                     <option>地级市</option>
-                    <option>省份</option>
-                    <option>原始值</option>
                   </select>
                   <span>进行对比，结果</span>
                   <select class="select" id="form-compare-relation">
@@ -2363,7 +2361,6 @@
                   </select>
                   <span>时触发</span>
                 </div>
-                <div class="strategy-hint">通过订单ID关联下单记录，取得下单网页IP；当前请求提供扫码设备IP，两个IP统一解析到所选行政区划颗粒度后进行对比。</div>
               </div>
               <div class="nested-card" id="automation-config" hidden>
                 <div class="nested-label">自动化行为识别配置</div>
@@ -3602,6 +3599,24 @@
       syncStrategyConditionMode();
     }
 
+    function syncCompareFieldOptions(changedSide) {
+      const leftSelect = $("#form-compare-left-field");
+      const rightSelect = $("#form-compare-right-field");
+
+      if (leftSelect.value === rightSelect.value) {
+        const targetSelect = changedSide === "right" ? leftSelect : rightSelect;
+        const alternative = [...targetSelect.options].find(option => option.value !== leftSelect.value);
+        if (alternative) targetSelect.value = alternative.value;
+      }
+
+      [...leftSelect.options].forEach(option => {
+        option.disabled = option.value === rightSelect.value;
+      });
+      [...rightSelect.options].forEach(option => {
+        option.disabled = option.value === leftSelect.value;
+      });
+    }
+
     function syncBusinessMetricCascade(mode) {
       const isBusinessMetric = $(`#form-${mode}-metric`).value === "业务字段值";
       $(`#${mode}-business-param-cascade`).hidden = !isBusinessMetric;
@@ -3633,6 +3648,7 @@
       setAutomationMode(false);
       syncBusinessMetricCascade("window");
       syncBusinessMetricCascade("period");
+      syncCompareFieldOptions();
       $("#blacklist-config").hidden = false;
       syncCustomSelects();
     }
@@ -3650,10 +3666,12 @@
       const judgmentType = item.judgmentType || (item.mode === "compare" ? "compare" : "threshold");
       $("#form-judgment-type").value = judgmentType;
       const compareConfig = item.compareConfig || {};
-      $("#form-compare-left-field").value = compareConfig.leftField || "扫码设备IP";
-      $("#form-compare-right-field").value = compareConfig.rightField || "下单网页IP";
-      $("#form-compare-dimension").value = compareConfig.dimension || "地级市";
+      const compareFieldValues = ["下单请求IP", "支付请求IP"];
+      $("#form-compare-left-field").value = compareFieldValues.includes(compareConfig.leftField) ? compareConfig.leftField : "下单请求IP";
+      $("#form-compare-right-field").value = compareFieldValues.includes(compareConfig.rightField) ? compareConfig.rightField : "支付请求IP";
+      $("#form-compare-dimension").value = "地级市";
       $("#form-compare-relation").value = compareConfig.relation || "不相等";
+      syncCompareFieldOptions();
       $("#form-scene").disabled = true;
       $("#form-status").value = item.status;
       $("#form-risk-type").disabled = true;
@@ -3685,6 +3703,10 @@
 
       const editId = Number($("#strategy-edit-id").value);
       const judgmentType = $("#form-judgment-type").value;
+      if (judgmentType === "compare" && $("#form-compare-left-field").value === $("#form-compare-right-field").value) {
+        showToast("左右对比字段不能相同");
+        return;
+      }
       const automationMode = !$("#automation-config").hidden;
       const mode = judgmentType === "compare"
         ? "compare"
@@ -4249,6 +4271,16 @@
 
     $("#form-judgment-type").addEventListener("change", event => {
       setJudgmentMode(event.target.value);
+      syncCustomSelects();
+    });
+
+    $("#form-compare-left-field").addEventListener("change", () => {
+      syncCompareFieldOptions("left");
+      syncCustomSelects();
+    });
+
+    $("#form-compare-right-field").addEventListener("change", () => {
+      syncCompareFieldOptions("right");
       syncCustomSelects();
     });
 
