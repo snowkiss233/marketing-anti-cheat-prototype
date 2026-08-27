@@ -1552,6 +1552,7 @@
                 <option value="权益入账">权益入账</option>
                 <option value="资格获取">资格获取</option>
                 <option value="权益兑换">权益兑换</option>
+                <option value="扫码支付">扫码支付</option>
               </select>
             </div>
             <div class="field">
@@ -1579,7 +1580,7 @@
                     <th>策略名称</th>
                     <th>触发场景</th>
                     <th>风控类型</th>
-                    <th>阈值配置</th>
+                    <th>判定条件</th>
                     <th>处置动作</th>
                     <th>封禁实体类型</th>
                     <th>状态</th>
@@ -2244,7 +2245,7 @@
                 <input class="input" id="form-strategy-name" maxlength="50" placeholder="请输入策略名称" required>
               </div>
               <div class="field">
-                <label class="required">规则类型</label>
+                <label class="required">规则范围</label>
                 <select class="select" id="form-rule-type">
                   <option>全局规则</option>
                   <option>活动规则</option>
@@ -2256,6 +2257,7 @@
                   <option>权益入账</option>
                   <option>资格获取</option>
                   <option>权益兑换</option>
+                  <option>扫码支付</option>
                 </select>
               </div>
               <div class="field">
@@ -2267,6 +2269,13 @@
                   <option>手机号</option>
                   <option>手机号段</option>
                   <option>自动化行为</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="required">判定方式</label>
+                <select class="select" id="form-judgment-type">
+                  <option value="threshold" selected>累计阈值</option>
+                  <option value="compare">业务字段对比</option>
                 </select>
               </div>
             </div>
@@ -2328,6 +2337,33 @@
                   </select>
                   <input class="input" id="form-period-count" type="number" min="1" value="5">
                 </div>
+              </div>
+              <div id="field-compare-config" hidden>
+                <div class="inline-form">
+                  <span>将</span>
+                  <select class="select metric" id="form-compare-left-field">
+                    <option>扫码设备IP</option>
+                    <option>请求IP</option>
+                  </select>
+                  <span>与</span>
+                  <select class="select metric" id="form-compare-right-field">
+                    <option>下单网页IP</option>
+                    <option>订单创建IP</option>
+                  </select>
+                  <span>按</span>
+                  <select class="select" id="form-compare-dimension">
+                    <option>地级市</option>
+                    <option>省份</option>
+                    <option>原始值</option>
+                  </select>
+                  <span>进行对比，结果</span>
+                  <select class="select" id="form-compare-relation">
+                    <option>不相等</option>
+                    <option>相等</option>
+                  </select>
+                  <span>时触发</span>
+                </div>
+                <div class="strategy-hint">通过订单ID关联下单记录，取得下单网页IP；当前请求提供扫码设备IP，两个IP统一解析到所选行政区划颗粒度后进行对比。</div>
               </div>
               <div class="nested-card" id="automation-config" hidden>
                 <div class="nested-label">自动化行为识别配置</div>
@@ -3551,6 +3587,21 @@
       $("#period-fields").hidden = mode !== "period";
     }
 
+    function syncStrategyConditionMode() {
+      const judgmentType = $("#form-judgment-type").value;
+      const isFieldCompare = judgmentType === "compare";
+      const isAutomation = $("#form-risk-type").value === "自动化行为" && !isFieldCompare;
+      $("#threshold-basic-config").hidden = isFieldCompare || isAutomation;
+      $("#field-compare-config").hidden = !isFieldCompare;
+      $("#automation-config").hidden = !isAutomation;
+      if (!isFieldCompare && !isAutomation && !$("[data-threshold].active")) setThresholdMode("window");
+    }
+
+    function setJudgmentMode(mode) {
+      $("#form-judgment-type").value = mode;
+      syncStrategyConditionMode();
+    }
+
     function syncBusinessMetricCascade(mode) {
       const isBusinessMetric = $(`#form-${mode}-metric`).value === "业务字段值";
       $(`#${mode}-business-param-cascade`).hidden = !isBusinessMetric;
@@ -3565,9 +3616,10 @@
     }
 
     function setAutomationMode(enabled) {
-      $("#threshold-basic-config").hidden = enabled;
-      $("#automation-config").hidden = !enabled;
-      if (!enabled && !$("[data-threshold].active")) setThresholdMode("window");
+      const judgmentSelect = $("#form-judgment-type");
+      if (enabled) judgmentSelect.value = "threshold";
+      judgmentSelect.disabled = enabled;
+      syncStrategyConditionMode();
     }
 
     function resetStrategyForm() {
@@ -3577,6 +3629,7 @@
       $("#form-scene").disabled = false;
       $("#form-risk-type").disabled = false;
       setThresholdMode("window");
+      setJudgmentMode("threshold");
       setAutomationMode(false);
       syncBusinessMetricCascade("window");
       syncBusinessMetricCascade("period");
@@ -3594,6 +3647,13 @@
       $("#form-rule-type").value = item.ruleType;
       $("#form-scene").value = item.scene;
       $("#form-risk-type").value = item.type;
+      const judgmentType = item.judgmentType || (item.mode === "compare" ? "compare" : "threshold");
+      $("#form-judgment-type").value = judgmentType;
+      const compareConfig = item.compareConfig || {};
+      $("#form-compare-left-field").value = compareConfig.leftField || "扫码设备IP";
+      $("#form-compare-right-field").value = compareConfig.rightField || "下单网页IP";
+      $("#form-compare-dimension").value = compareConfig.dimension || "地级市";
+      $("#form-compare-relation").value = compareConfig.relation || "不相等";
       $("#form-scene").disabled = true;
       $("#form-status").value = item.status;
       $("#form-risk-type").disabled = true;
@@ -3604,7 +3664,8 @@
         input.checked = item.banEntityTypes.includes(input.value);
       });
       setAutomationMode(item.mode === "behavior");
-      if (item.mode !== "behavior") setThresholdMode(item.mode || "window");
+      if (item.mode !== "behavior" && item.mode !== "compare") setThresholdMode(item.mode || "window");
+      setJudgmentMode(judgmentType);
       syncCustomSelects();
       openModal("strategy-modal");
     }
@@ -3623,9 +3684,16 @@
       }
 
       const editId = Number($("#strategy-edit-id").value);
+      const judgmentType = $("#form-judgment-type").value;
       const automationMode = !$("#automation-config").hidden;
-      const mode = automationMode ? "behavior" : $("[data-threshold].active").dataset.threshold;
-      const threshold = mode === "window"
+      const mode = judgmentType === "compare"
+        ? "compare"
+        : automationMode
+          ? "behavior"
+          : $("[data-threshold].active").dataset.threshold;
+      const threshold = mode === "compare"
+        ? `将${$("#form-compare-left-field").value}与${$("#form-compare-right-field").value}按${$("#form-compare-dimension").value}进行对比，结果${$("#form-compare-relation").value}时触发`
+        : mode === "window"
         ? `在 ${$("#form-window").value} 秒内，计算${getThresholdMetricText("window")} ${$("#form-window-relation").value} ${$("#form-window-count").value}`
         : mode === "period"
           ? `在每日 ${$("#form-start-time").value} 至 ${$("#form-end-time").value} 期间，计算${getThresholdMetricText("period")} ${$("#form-period-relation").value} ${$("#form-period-count").value}`
@@ -3644,7 +3712,14 @@
         status: $("#form-status").value,
         updatedAt: nowText(),
         operator: "管理员",
-        mode
+        mode,
+        judgmentType,
+        compareConfig: judgmentType === "compare" ? {
+          leftField: $("#form-compare-left-field").value,
+          rightField: $("#form-compare-right-field").value,
+          dimension: $("#form-compare-dimension").value,
+          relation: $("#form-compare-relation").value
+        } : null
       };
 
       if (editId) {
@@ -4170,6 +4245,11 @@
       $(`#form-${mode}-metric`).addEventListener("change", () => {
         syncBusinessMetricCascade(mode);
       });
+    });
+
+    $("#form-judgment-type").addEventListener("change", event => {
+      setJudgmentMode(event.target.value);
+      syncCustomSelects();
     });
 
     $("#form-risk-type").addEventListener("change", event => {
