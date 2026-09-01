@@ -2300,7 +2300,9 @@
                   </select>
                   <div class="metric-cascade" id="window-business-param-cascade" hidden>
                     <select class="select metric" id="form-window-business-param">
+                      <option value="" selected disabled>请选择</option>
                       <option>LOL gameid</option>
+                      <option>消费金额</option>
                     </select>
                   </div>
                   <select class="select" id="form-window-relation">
@@ -2325,7 +2327,9 @@
                   </select>
                   <div class="metric-cascade" id="period-business-param-cascade" hidden>
                     <select class="select metric" id="form-period-business-param">
+                      <option value="" selected disabled>请选择</option>
                       <option>LOL gameid</option>
+                      <option>消费金额</option>
                     </select>
                   </div>
                   <select class="select" id="form-period-relation">
@@ -3720,6 +3724,12 @@
         : automationMode
           ? "behavior"
           : $("[data-threshold].active").dataset.threshold;
+      if ((mode === "window" || mode === "period")
+        && $(`#form-${mode}-metric`).value === "业务字段值"
+        && !$(`#form-${mode}-business-param`).value) {
+        showToast("请选择业务字段");
+        return;
+      }
       const threshold = mode === "compare"
         ? `将${$("#form-compare-left-field").value}与${$("#form-compare-right-field").value}按${$("#form-compare-dimension").value}进行对比，结果${$("#form-compare-relation").value}时触发`
         : mode === "window"
