@@ -1335,56 +1335,6 @@
       font-weight: 700;
     }
 
-    .scope-flow {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
-      align-items: stretch;
-      margin-top: 16px;
-    }
-
-    .scope-flow-node {
-      padding: 13px 14px;
-      background: #fff;
-      border: 1px solid #dce6f3;
-      border-radius: 7px;
-    }
-
-    .scope-flow-node small {
-      display: block;
-      margin-bottom: 6px;
-      color: #8a98aa;
-      font-size: 11px;
-    }
-
-    .scope-flow-node strong {
-      color: #30435d;
-      font-size: 13px;
-    }
-
-    .scope-flow-node.highlight {
-      background: #f2f7ff;
-      border-color: #a9c8f6;
-    }
-
-    .scope-flow-arrow {
-      display: grid;
-      place-items: center;
-      color: var(--blue);
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .scope-warning {
-      margin-top: 12px;
-      padding: 10px 12px;
-      color: #9a5c0b;
-      background: #fff8e8;
-      border: 1px solid #f3d49b;
-      border-radius: 6px;
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
     .scope-overview {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2706,18 +2656,6 @@
                   </select>
                 </div>
               </div>
-              <div class="scope-flow">
-                <div class="scope-flow-node">
-                  <small>检测策略范围</small>
-                  <strong id="strategy-detect-scope-preview">全部营销活动</strong>
-                </div>
-                <div class="scope-flow-arrow">→</div>
-                <div class="scope-flow-node highlight">
-                  <small>命中后的名单生效范围</small>
-                  <strong id="strategy-ban-scope-preview">活动黑名单 · 活动名称待输入（ID 待输入）</strong>
-                </div>
-              </div>
-              <div class="scope-warning" id="strategy-global-ban-warning" hidden>全局活动黑名单将影响该实体参与全部营销活动。该处置与策略检测范围无强绑定，上线时建议增加高级权限及二次确认。</div>
               <div class="nested-label" style="margin-top: 18px;">封禁实体类型（至少选择一项）</div>
               <div class="checks" id="entity-checks">
                 <label><input type="checkbox" value="用户ID" checked> 用户ID</label>
@@ -2778,18 +2716,6 @@
                   <input class="input" id="form-blacklist-activity" maxlength="64" placeholder="请输入活动ID，例如：11017">
                 </div>
               </div>
-              <div class="scope-flow">
-                <div class="scope-flow-node">
-                  <small>名单业务域</small>
-                  <strong>营销活动领奖</strong>
-                </div>
-                <div class="scope-flow-arrow">→</div>
-                <div class="scope-flow-node highlight">
-                  <small>实际生效范围</small>
-                  <strong id="blacklist-effect-scope-preview">活动黑名单 · 活动名称待输入（ID 待输入）</strong>
-                </div>
-              </div>
-              <div class="scope-warning" id="blacklist-global-warning" hidden>该记录将对全部营销活动生效。同一实体已有的活动名单不会被覆盖，两类名单将分别保留审计和解封记录。</div>
             </div>
           </div>
 
@@ -4077,22 +4003,13 @@
 
     function syncStrategyDispositionPreview() {
       const isActivityRule = $("#form-rule-type").value === "活动规则";
-      const activityName = $("#form-strategy-activity-name").value.trim();
       const activityId = $("#form-strategy-activity").value.trim();
-      const blacklistScope = $("#form-ban-scope").value;
-      $("#strategy-detect-scope-preview").textContent = isActivityRule
-        ? `${activityName || "活动名称待输入"} · ID ${activityId || "待输入"}`
-        : "全部营销活动";
-      $("#strategy-ban-scope-preview").textContent = blacklistScope === "GLOBAL"
-        ? "全局活动黑名单"
-        : (isActivityRule ? `活动黑名单 · ${activityName || "活动名称待输入"}（ID ${activityId || "待输入"}）` : "活动黑名单 · 按请求活动ID生成");
       const activityScopeOption = [...$("#form-ban-scope").options].find(option => option.value === "CURRENT_ACTIVITY");
       activityScopeOption.textContent = isActivityRule
         ? `活动黑名单（继承活动ID${activityId ? ` ${activityId}` : ""}）`
         : "活动黑名单（按请求活动ID）";
       const customOption = $("#form-ban-scope").closest(".custom-select")?.querySelector('.custom-option[data-value="CURRENT_ACTIVITY"]');
       if (customOption) customOption.textContent = activityScopeOption.textContent;
-      $("#strategy-global-ban-warning").hidden = blacklistScope !== "GLOBAL";
       syncCustomSelect($("#form-ban-scope"));
     }
 
@@ -4362,12 +4279,6 @@
       const isActivityScope = effectScopeType === "ACTIVITY";
       $("#form-blacklist-activity-name-field").hidden = !isActivityScope;
       $("#form-blacklist-activity-field").hidden = !isActivityScope;
-      const activityName = isActivityScope ? $("#form-blacklist-activity-name").value.trim() : "";
-      const activityId = isActivityScope ? $("#form-blacklist-activity").value.trim() : "";
-      $("#blacklist-effect-scope-preview").textContent = isActivityScope
-        ? `活动黑名单 · ${activityName || "活动名称待输入"}（ID ${activityId || "待输入"}）`
-        : "全局活动黑名单";
-      $("#blacklist-global-warning").hidden = effectScopeType !== "GLOBAL";
       syncCustomSelects();
     }
 
@@ -4837,13 +4748,10 @@
     });
 
     $("#form-rule-type").addEventListener("change", syncStrategyScopeConfig);
-    $("#form-strategy-activity-name").addEventListener("input", syncStrategyDispositionPreview);
     $("#form-strategy-activity").addEventListener("input", syncStrategyDispositionPreview);
     $("#form-ban-scope").addEventListener("change", syncStrategyDispositionPreview);
 
     $("#form-blacklist-effect-scope").addEventListener("change", syncActivityBlacklistScopeConfig);
-    $("#form-blacklist-activity-name").addEventListener("input", syncActivityBlacklistScopeConfig);
-    $("#form-blacklist-activity").addEventListener("input", syncActivityBlacklistScopeConfig);
 
     $("#form-compare-left-field").addEventListener("change", () => {
       syncCompareFieldOptions("left");
