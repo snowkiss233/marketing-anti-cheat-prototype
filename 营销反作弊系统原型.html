@@ -673,7 +673,7 @@
     }
 
     table.strategy-table {
-      min-width: 1640px;
+      min-width: 1840px;
     }
 
     table.activity-blacklist-table {
@@ -1741,15 +1741,15 @@
               <input class="input" id="strategy-keyword" placeholder="输入策略关键词">
             </div>
             <div class="field">
-              <label>策略作用域</label>
+              <label>策略范围</label>
               <select class="select" id="strategy-scope">
-                <option value="">全部作用域</option>
+                <option value="">全部范围</option>
                 <option value="全局规则">全局</option>
                 <option value="活动规则">指定活动</option>
               </select>
             </div>
             <div class="field">
-              <label>绑定活动</label>
+              <label>适用活动</label>
               <select class="select" id="strategy-activity">
                 <option value="">全部活动</option>
                 <option value="11017">PUBG 夏日集结抽奖（11017）</option>
@@ -1785,7 +1785,7 @@
             </div>
           </div>
 
-          <div class="strategy-hint" style="margin: -8px 0 18px;">作用域与处置已解耦：策略决定“哪些请求参与检测”，黑名单处置范围决定“命中后影响当前活动还是全部活动”。全局策略与活动策略可以分别配置活动黑名单或全局活动黑名单。</div>
+          <div class="strategy-hint" style="margin: -8px 0 18px;">策略范围与处置已解耦：策略决定“哪些请求参与检测”，黑名单处置范围决定“命中后影响当前活动还是全部活动”。全局策略与活动策略可以分别配置活动黑名单或全局活动黑名单。</div>
 
           <div class="card table-card">
             <div class="table-wrap">
@@ -1794,7 +1794,9 @@
                   <tr>
                     <th>ID</th>
                     <th>策略名称</th>
-                    <th>策略作用域</th>
+                    <th>策略范围</th>
+                    <th>适用活动</th>
+                    <th>所属业务</th>
                     <th>触发场景</th>
                     <th>风控类型</th>
                     <th>判定条件</th>
@@ -2169,7 +2171,7 @@
               </div>
             </div>
 
-            <div class="strategy-hint">记录口径：名单生效范围与来源策略作用域相互独立。全局活动黑名单覆盖所有营销活动；指定活动黑名单仅在绑定活动内执行“禁止领奖”。同一实体可分别存在于不同活动名单中。</div>
+            <div class="strategy-hint">记录口径：名单生效范围与来源策略范围相互独立。全局活动黑名单覆盖所有营销活动；指定活动黑名单仅在绑定活动内执行“禁止领奖”。同一实体可分别存在于不同活动名单中。</div>
 
             <div class="card table-card">
               <div class="table-wrap">
@@ -2520,7 +2522,7 @@
                 <input class="input" id="form-strategy-name" maxlength="50" placeholder="请输入策略名称" required>
               </div>
               <div class="field">
-                <label class="required">策略作用域</label>
+                <label class="required">策略范围</label>
                 <select class="select" id="form-rule-type">
                   <option>全局规则</option>
                   <option>活动规则</option>
@@ -2713,7 +2715,7 @@
               <input type="checkbox" id="form-blacklist" checked>
               <span>
                 <span class="check-title">加入黑名单</span>
-                <div class="check-note">将命中的风险实体写入名单服务；名单生效范围与策略作用域独立配置。</div>
+                <div class="check-note">将命中的风险实体写入名单服务；名单生效范围与策略范围独立配置。</div>
               </span>
             </label>
             <div class="nested-card" id="blacklist-config">
@@ -2741,7 +2743,7 @@
               </div>
               <div class="scope-flow">
                 <div class="scope-flow-node">
-                  <small>检测策略作用域</small>
+                  <small>检测策略范围</small>
                   <strong id="strategy-detect-scope-preview">全部营销活动</strong>
                 </div>
                 <div class="scope-flow-arrow">→</div>
@@ -3606,12 +3608,18 @@
       ` : "";
     }
 
-    function renderStrategyScopeCell(item) {
-      if (item.ruleType === "活动规则") {
-        const activity = getActivity(item.activityId);
-        return `<td><div class="scope-cell"><span class="tag tag-blue">指定活动</span><strong>${escapeHtml(activity?.name || "未绑定活动")}</strong><small>${activity ? `ID ${activity.id} · ${activity.business}` : "请补充活动ID"}</small></div></td>`;
-      }
-      return `<td><div class="scope-cell"><span class="tag tag-purple">全局</span><strong>全部营销活动</strong><small>跨活动执行检测</small></div></td>`;
+    function renderStrategyScopeCells(item) {
+      const activity = item.ruleType === "活动规则" ? getActivity(item.activityId) : null;
+      const scopeCell = item.ruleType === "活动规则"
+        ? `<td><span class="tag tag-blue">指定活动</span></td>`
+        : `<td><span class="tag tag-purple">全局</span></td>`;
+      const activityCell = activity
+        ? `<td><div class="scope-cell"><strong style="margin-top: 0;">${escapeHtml(activity.name)}</strong><small>ID ${activity.id}</small></div></td>`
+        : `<td><div class="scope-cell"><strong style="margin-top: 0;">全部营销活动</strong></div></td>`;
+      const businessCell = activity
+        ? `<td>${escapeHtml(activity.business)}</td>`
+        : `<td>全部业务</td>`;
+      return scopeCell + activityCell + businessCell;
     }
 
     function renderStrategyBlacklistScope(item) {
@@ -3753,7 +3761,7 @@
         <tr>
           <td>${item.id}</td>
           <td><strong>${escapeHtml(item.name)}</strong></td>
-          ${renderStrategyScopeCell(item)}
+          ${renderStrategyScopeCells(item)}
           <td><span class="tag tag-orange">${escapeHtml(item.scene)}</span></td>
           <td>${escapeHtml(item.type)}</td>
           <td><div class="threshold">${escapeHtml(item.threshold)}</div></td>
@@ -3771,7 +3779,7 @@
             </div>
           </td>
         </tr>
-      `).join("") : `<tr><td colspan="13"><div class="empty">未查询到匹配的反作弊策略</div></td></tr>`;
+      `).join("") : `<tr><td colspan="15"><div class="empty">未查询到匹配的反作弊策略</div></td></tr>`;
       $("#strategy-count").textContent = `共 ${list.length} 条数据`;
     }
 
