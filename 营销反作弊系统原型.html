@@ -359,6 +359,33 @@
       grid-template-columns: repeat(3, minmax(170px, 1fr)) auto auto auto;
     }
 
+    .filter-card.strategy-filter {
+      grid-template-columns: minmax(180px, 1.2fr) 130px minmax(210px, 1.35fr) 140px 140px auto;
+      gap: 16px;
+    }
+
+    .filter-card.activity-blacklist-filter {
+      grid-template-columns: 120px minmax(210px, 1.25fr) 120px 120px minmax(180px, 1fr) auto;
+      gap: 16px;
+    }
+
+    .filter-card.activity-unban-filter {
+      grid-template-columns: 120px minmax(210px, 1.25fr) 120px minmax(190px, 1fr) auto;
+      gap: 16px;
+    }
+
+    .filter-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+
+    .filter-actions .btn {
+      min-width: 68px;
+      padding: 0 16px;
+    }
+
     .filter-card.login-blacklist-filter {
       grid-template-columns: 110px 120px minmax(180px, 300px) minmax(300px, 400px) auto;
       gap: 16px;
@@ -646,7 +673,11 @@
     }
 
     table.strategy-table {
-      min-width: 1320px;
+      min-width: 1640px;
+    }
+
+    table.activity-blacklist-table {
+      min-width: 2140px;
     }
 
     th,
@@ -1289,6 +1320,159 @@
       border-radius: 8px;
     }
 
+    .scope-config-card {
+      margin-top: 18px;
+      padding: 16px;
+      background: linear-gradient(135deg, #f7faff 0%, #fbfcff 100%);
+      border: 1px solid #dce8f8;
+      border-radius: 8px;
+    }
+
+    .scope-config-title {
+      margin-bottom: 14px;
+      color: #34435a;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .activity-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      color: #6d7d92;
+      font-size: 12px;
+    }
+
+    .activity-meta span {
+      padding: 5px 9px;
+      background: #fff;
+      border: 1px solid #e2eaf5;
+      border-radius: 4px;
+    }
+
+    .scope-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+      align-items: stretch;
+      margin-top: 16px;
+    }
+
+    .scope-flow-node {
+      padding: 13px 14px;
+      background: #fff;
+      border: 1px solid #dce6f3;
+      border-radius: 7px;
+    }
+
+    .scope-flow-node small {
+      display: block;
+      margin-bottom: 6px;
+      color: #8a98aa;
+      font-size: 11px;
+    }
+
+    .scope-flow-node strong {
+      color: #30435d;
+      font-size: 13px;
+    }
+
+    .scope-flow-node.highlight {
+      background: #f2f7ff;
+      border-color: #a9c8f6;
+    }
+
+    .scope-flow-arrow {
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .scope-warning {
+      margin-top: 12px;
+      padding: 10px 12px;
+      color: #9a5c0b;
+      background: #fff8e8;
+      border: 1px solid #f3d49b;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .scope-overview {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: -6px 0 20px;
+    }
+
+    .scope-overview-card {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 16px 18px;
+      background: #fff;
+      border: 1px solid #edf0f5;
+      border-radius: 9px;
+      box-shadow: 0 2px 8px rgba(43, 59, 82, 0.03);
+    }
+
+    .scope-overview-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--blue);
+      background: var(--blue-soft);
+      border-radius: 9px;
+      font-weight: 800;
+    }
+
+    .scope-overview-card.global .scope-overview-mark {
+      color: #7c3aed;
+      background: #f3e8ff;
+    }
+
+    .scope-overview-card strong {
+      display: block;
+      color: #2f4058;
+      font-size: 18px;
+    }
+
+    .scope-overview-card span {
+      display: block;
+      margin-top: 3px;
+      color: #8491a4;
+      font-size: 12px;
+    }
+
+    .scope-cell {
+      min-width: 170px;
+    }
+
+    .scope-cell strong {
+      display: block;
+      margin-top: 7px;
+      color: #374a64;
+      font-size: 13px;
+    }
+
+    .scope-cell small {
+      display: block;
+      margin-top: 4px;
+      color: #8a98aa;
+      font-size: 11px;
+    }
+
+    .tag-purple {
+      color: #7c3aed;
+      background: #f3e8ff;
+    }
+
     .nested-label {
       margin-bottom: 14px;
       color: #68768a;
@@ -1451,10 +1635,21 @@
 
       .filter-card,
       .filter-card.blacklist,
+      .filter-card.strategy-filter,
+      .filter-card.activity-blacklist-filter,
+      .filter-card.activity-unban-filter,
       .filter-card.login-blacklist-filter,
       .filter-card.login-unban-filter,
       .filter-card.whitelist-filter {
         grid-template-columns: repeat(2, minmax(160px, 1fr));
+      }
+
+      .filter-actions {
+        grid-column: 1 / -1;
+      }
+
+      .scope-overview {
+        grid-template-columns: 1fr;
       }
 
       .activity-entity-row,
@@ -1526,7 +1721,7 @@
           <div class="page-heading">
             <div>
               <h1>反作弊策略管理</h1>
-              <p class="page-description">配置和管理业务场景下的反作弊检测规则，实时拦截异常操作。</p>
+              <p class="page-description">配置全局或指定活动的检测策略，并独立设置命中后的活动名单处置范围。</p>
             </div>
             <button class="btn btn-primary" id="strategy-add-btn" data-open="strategy-modal">
               <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
@@ -1540,10 +1735,27 @@
           </div>
 
           <div class="strategy-panel active" id="strategy-list-panel">
-          <div class="card filter-card">
+          <div class="card filter-card strategy-filter">
             <div class="field">
               <label>策略名称</label>
               <input class="input" id="strategy-keyword" placeholder="输入策略关键词">
+            </div>
+            <div class="field">
+              <label>策略作用域</label>
+              <select class="select" id="strategy-scope">
+                <option value="">全部作用域</option>
+                <option value="全局规则">全局</option>
+                <option value="活动规则">指定活动</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>绑定活动</label>
+              <select class="select" id="strategy-activity">
+                <option value="">全部活动</option>
+                <option value="11017">PUBG 夏日集结抽奖（11017）</option>
+                <option value="11024">NN 周年庆积分狂欢（11024）</option>
+                <option value="10998">雷神会员兑换季（10998）</option>
+              </select>
             </div>
             <div class="field">
               <label>触发场景</label>
@@ -1567,9 +1779,13 @@
                 <option>自动化行为</option>
               </select>
             </div>
-            <button class="btn btn-primary" id="strategy-search">查询</button>
-            <button class="btn" id="strategy-reset">重置</button>
+            <div class="filter-actions">
+              <button class="btn btn-primary" id="strategy-search">查询</button>
+              <button class="btn" id="strategy-reset">重置</button>
+            </div>
           </div>
+
+          <div class="strategy-hint" style="margin: -8px 0 18px;">作用域与处置已解耦：策略决定“哪些请求参与检测”，黑名单处置范围决定“命中后影响当前活动还是全部活动”。全局策略与活动策略可以分别配置活动黑名单或全局活动黑名单。</div>
 
           <div class="card table-card">
             <div class="table-wrap">
@@ -1578,10 +1794,12 @@
                   <tr>
                     <th>ID</th>
                     <th>策略名称</th>
+                    <th>策略作用域</th>
                     <th>触发场景</th>
                     <th>风控类型</th>
                     <th>判定条件</th>
                     <th>处置动作</th>
+                    <th>名单生效范围</th>
                     <th>封禁实体类型</th>
                     <th>状态</th>
                     <th>更新时间</th>
@@ -1868,7 +2086,7 @@
           <div class="page-heading">
             <div>
               <h1>多维活动黑名单管理</h1>
-              <p class="page-description">统一管理活动场景下各维度的风险实体限制与白名单豁免对象。</p>
+              <p class="page-description">统一管理全部营销活动或指定活动下的多维风险实体限制与审计记录。</p>
             </div>
             <button class="btn btn-primary" id="blacklist-add-btn" data-open="blacklist-modal">
               <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
@@ -1887,7 +2105,24 @@
           </div>
 
           <div class="tab-panel active" id="blacklist-list">
-            <div class="card filter-card blacklist">
+            <div class="card filter-card activity-blacklist-filter">
+              <div class="field">
+                <label>生效范围</label>
+                <select class="select" id="blacklist-effect-scope">
+                  <option value="">全部范围</option>
+                  <option value="GLOBAL">全局活动</option>
+                  <option value="ACTIVITY">指定活动</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>适用活动</label>
+                <select class="select" id="blacklist-activity">
+                  <option value="">全部活动</option>
+                  <option value="11017">PUBG 夏日集结抽奖（11017）</option>
+                  <option value="11024">NN 周年庆积分狂欢（11024）</option>
+                  <option value="10998">雷神会员兑换季（10998）</option>
+                </select>
+              </div>
               <div class="field">
                 <label>实体类型</label>
                 <select class="select" id="blacklist-type">
@@ -1912,16 +2147,33 @@
                 <label>实体值</label>
                 <input class="input" id="blacklist-keyword" placeholder="请输入查询内容">
               </div>
-              <button class="btn btn-primary" id="blacklist-search">查询</button>
-              <button class="btn" id="blacklist-reset">重置</button>
-              <button class="btn" id="blacklist-export">导出</button>
+              <div class="filter-actions">
+                <button class="btn btn-primary" id="blacklist-search">查询</button>
+                <button class="btn" id="blacklist-reset">重置</button>
+                <button class="btn" id="blacklist-export">导出</button>
+              </div>
             </div>
 
-            <div class="strategy-hint">记录口径：每一行是一条多实体活动黑名单记录；用户ID、IP、设备ID、手机号、手机号段可组合保存，任一实体命中即执行该记录的“禁止领奖”处置。解封时可选择部分或全部实体；仅被选中的实体失效，未选实体继续生效。</div>
+            <div class="scope-overview">
+              <div class="scope-overview-card global">
+                <div class="scope-overview-mark">G</div>
+                <div><strong id="blacklist-global-summary">0</strong><span>全局活动黑名单 · 对全部活动生效</span></div>
+              </div>
+              <div class="scope-overview-card">
+                <div class="scope-overview-mark">A</div>
+                <div><strong id="blacklist-activity-summary">0</strong><span>指定活动黑名单 · 活动之间相互隔离</span></div>
+              </div>
+              <div class="scope-overview-card">
+                <div class="scope-overview-mark">ID</div>
+                <div><strong id="blacklist-covered-activity-summary">0</strong><span>当前已配置名单的活动数</span></div>
+              </div>
+            </div>
+
+            <div class="strategy-hint">记录口径：名单生效范围与来源策略作用域相互独立。全局活动黑名单覆盖所有营销活动；指定活动黑名单仅在绑定活动内执行“禁止领奖”。同一实体可分别存在于不同活动名单中。</div>
 
             <div class="card table-card">
               <div class="table-wrap">
-                <table class="wide-table">
+                <table class="wide-table activity-blacklist-table">
                   <thead>
                     <tr>
                       <th>用户ID</th>
@@ -1930,8 +2182,11 @@
                       <th>手机号</th>
                       <th>手机号段</th>
                       <th>实体类型</th>
-                      <th>封禁范围</th>
+                      <th>名单生效范围</th>
+                      <th>适用活动</th>
+                      <th>限制动作</th>
                       <th>数据来源</th>
+                      <th>来源策略</th>
                       <th>封禁原因</th>
                       <th>封禁时长</th>
                       <th>封禁时间</th>
@@ -1956,7 +2211,24 @@
           </div>
 
           <div class="tab-panel" id="unban-list">
-            <div class="card filter-card">
+            <div class="card filter-card activity-unban-filter">
+              <div class="field">
+                <label>原生效范围</label>
+                <select class="select" id="unban-effect-scope">
+                  <option value="">全部范围</option>
+                  <option value="GLOBAL">全局活动</option>
+                  <option value="ACTIVITY">指定活动</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>原适用活动</label>
+                <select class="select" id="unban-activity">
+                  <option value="">全部活动</option>
+                  <option value="11017">PUBG 夏日集结抽奖（11017）</option>
+                  <option value="11024">NN 周年庆积分狂欢（11024）</option>
+                  <option value="10998">雷神会员兑换季（10998）</option>
+                </select>
+              </div>
               <div class="field">
                 <label>实体类型</label>
                 <select class="select" id="unban-type">
@@ -1972,9 +2244,10 @@
                 <label>实体值</label>
                 <input class="input" id="unban-keyword" placeholder="请输入查询内容">
               </div>
-              <div></div>
-              <button class="btn btn-primary" id="unban-search">查询</button>
-              <button class="btn" id="unban-reset">重置</button>
+              <div class="filter-actions">
+                <button class="btn btn-primary" id="unban-search">查询</button>
+                <button class="btn" id="unban-reset">重置</button>
+              </div>
             </div>
 
             <div class="strategy-hint">展示口径：解封记录按实体拆分展示；部分解封仅记录本次选中的实体，未选实体继续保留在原活动黑名单记录中。</div>
@@ -1986,7 +2259,9 @@
                     <tr>
                       <th>实体值</th>
                       <th>实体类型</th>
-                      <th>原封禁范围</th>
+                      <th>原名单生效范围</th>
+                      <th>原适用活动</th>
+                      <th>原限制动作</th>
                       <th>原封禁来源</th>
                       <th>原封禁原因</th>
                       <th>原封禁时长</th>
@@ -2245,7 +2520,7 @@
                 <input class="input" id="form-strategy-name" maxlength="50" placeholder="请输入策略名称" required>
               </div>
               <div class="field">
-                <label class="required">规则范围</label>
+                <label class="required">策略作用域</label>
                 <select class="select" id="form-rule-type">
                   <option>全局规则</option>
                   <option>活动规则</option>
@@ -2278,6 +2553,26 @@
                   <option value="compare">业务字段对比</option>
                 </select>
               </div>
+            </div>
+            <div class="scope-config-card" id="strategy-activity-config" hidden>
+              <div class="scope-config-title">绑定活动</div>
+              <div class="form-grid">
+                <div class="field">
+                  <label class="required">指定活动</label>
+                  <select class="select" id="form-strategy-activity">
+                    <option value="">请选择活动</option>
+                    <option value="11017">PUBG 夏日集结抽奖（11017）</option>
+                    <option value="11024">NN 周年庆积分狂欢（11024）</option>
+                    <option value="10998">雷神会员兑换季（10998）</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>统计隔离方式</label>
+                  <input class="input" value="按当前活动独立累计" disabled>
+                </div>
+              </div>
+              <div class="activity-meta" id="strategy-activity-meta"></div>
+              <div class="strategy-hint">活动策略只参与绑定活动的检测；滑动窗口、固定时段等阈值数据均按活动 ID 隔离累计。</div>
             </div>
           </div>
 
@@ -2418,11 +2713,45 @@
               <input type="checkbox" id="form-blacklist" checked>
               <span>
                 <span class="check-title">加入黑名单</span>
-                <div class="check-note">将命中的风险实体同步写入多维活动黑名单。</div>
+                <div class="check-note">将命中的风险实体写入名单服务；名单生效范围与策略作用域独立配置。</div>
               </span>
             </label>
             <div class="nested-card" id="blacklist-config">
-              <div class="nested-label">封禁实体类型（至少选择一项）</div>
+              <div class="nested-label">名单处置配置</div>
+              <div class="form-grid">
+                <div class="field">
+                  <label class="required">名单生效范围</label>
+                  <select class="select" id="form-ban-scope">
+                    <option value="CURRENT_ACTIVITY">当前请求活动</option>
+                    <option value="GLOBAL">全部营销活动</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="required">封禁时长</label>
+                  <select class="select" id="form-ban-duration">
+                    <option>3天</option>
+                    <option>10天</option>
+                    <option>15天</option>
+                    <option selected>30天</option>
+                    <option>60天</option>
+                    <option>90天</option>
+                    <option>永久封禁</option>
+                  </select>
+                </div>
+              </div>
+              <div class="scope-flow">
+                <div class="scope-flow-node">
+                  <small>检测策略作用域</small>
+                  <strong id="strategy-detect-scope-preview">全部营销活动</strong>
+                </div>
+                <div class="scope-flow-arrow">→</div>
+                <div class="scope-flow-node highlight">
+                  <small>命中后的名单生效范围</small>
+                  <strong id="strategy-ban-scope-preview">当前请求活动</strong>
+                </div>
+              </div>
+              <div class="scope-warning" id="strategy-global-ban-warning" hidden>全局活动黑名单将影响该实体参与全部营销活动。该处置与策略检测范围无强绑定，上线时建议增加高级权限及二次确认。</div>
+              <div class="nested-label" style="margin-top: 18px;">封禁实体类型（至少选择一项）</div>
               <div class="checks" id="entity-checks">
                 <label><input type="checkbox" value="用户ID" checked> 用户ID</label>
                 <label><input type="checkbox" value="手机号"> 手机号</label>
@@ -2430,19 +2759,7 @@
                 <label><input type="checkbox" value="设备标识"> 设备标识</label>
                 <label><input type="checkbox" value="手机号段"> 手机号段</label>
               </div>
-              <div class="field" style="max-width: 360px; margin-top: 18px;">
-                <label class="required">封禁时长</label>
-                <select class="select" id="form-ban-duration">
-                  <option>3天</option>
-                  <option>10天</option>
-                  <option>15天</option>
-                  <option selected>30天</option>
-                  <option>60天</option>
-                  <option>90天</option>
-                  <option>永久封禁</option>
-                </select>
-                <span class="info-tip">ⓘ 以上勾选的所有实体将共用此封禁时长</span>
-              </div>
+              <span class="info-tip">ⓘ 以上勾选的所有实体将共用名单生效范围与封禁时长</span>
             </div>
           </div>
 
@@ -2472,8 +2789,45 @@
         <button class="close" data-close="blacklist-modal">×</button>
       </div>
       <div class="modal-body">
-        <p class="page-description" style="margin: -6px 0 22px;">一条活动黑名单记录可包含多个不同类型实体，任一实体命中时均执行整条记录的领奖限制。</p>
+        <p class="page-description" style="margin: -6px 0 22px;">先确定名单在哪些活动生效，再配置风险实体。活动名单与全局活动名单独立保存、独立解封。</p>
         <form id="blacklist-form">
+          <div class="form-section">
+            <h3 class="section-title">生效范围</h3>
+            <div class="scope-config-card" style="margin-top: 0;">
+              <div class="form-grid">
+                <div class="field">
+                  <label class="required">名单生效范围</label>
+                  <select class="select" id="form-blacklist-effect-scope">
+                    <option value="ACTIVITY" selected>指定活动</option>
+                    <option value="GLOBAL">全部营销活动</option>
+                  </select>
+                </div>
+                <div class="field" id="form-blacklist-activity-field">
+                  <label class="required">适用活动</label>
+                  <select class="select" id="form-blacklist-activity">
+                    <option value="">请选择活动</option>
+                    <option value="11017">PUBG 夏日集结抽奖（11017）</option>
+                    <option value="11024">NN 周年庆积分狂欢（11024）</option>
+                    <option value="10998">雷神会员兑换季（10998）</option>
+                  </select>
+                </div>
+              </div>
+              <div class="activity-meta" id="blacklist-activity-meta"></div>
+              <div class="scope-flow">
+                <div class="scope-flow-node">
+                  <small>名单业务域</small>
+                  <strong>营销活动领奖</strong>
+                </div>
+                <div class="scope-flow-arrow">→</div>
+                <div class="scope-flow-node highlight">
+                  <small>实际生效范围</small>
+                  <strong id="blacklist-effect-scope-preview">请选择活动</strong>
+                </div>
+              </div>
+              <div class="scope-warning" id="blacklist-global-warning" hidden>该记录将对全部营销活动生效。同一实体已有的活动名单不会被覆盖，两类名单将分别保留审计和解封记录。</div>
+            </div>
+          </div>
+
           <div class="form-section">
             <div class="entity-batch-header">
               <h3 class="section-title">封禁实体</h3>
@@ -2491,7 +2845,7 @@
             <h3 class="section-title">封禁配置</h3>
             <div class="form-grid">
               <div class="field">
-                <label>封禁范围</label>
+                <label>限制动作</label>
                 <input class="input" id="form-blacklist-scope" value="禁止领奖" disabled>
               </div>
               <div class="field">
@@ -2513,7 +2867,7 @@
                 <textarea class="textarea" id="form-blacklist-reason" maxlength="200" placeholder="请输入该条活动黑名单记录的封禁原因，最多 200 字" required></textarea>
               </div>
             </div>
-            <span class="info-tip">ⓘ 记录内所有实体共用封禁范围、封禁时长、封禁原因、操作人和操作时间；解封时可选择部分或全部实体。</span>
+            <span class="info-tip">ⓘ 记录内所有实体共用名单生效范围、限制动作、封禁时长和原因；解封时可选择部分或全部实体。</span>
           </div>
         </form>
       </div>
@@ -2701,7 +3055,11 @@
               <div class="field-error" id="unban-entity-error"></div>
             </div>
             <div class="field">
-              <label>原封禁范围</label>
+              <label>原名单生效范围</label>
+              <input class="input" id="form-unban-effect-scope" disabled>
+            </div>
+            <div class="field">
+              <label>原限制动作</label>
               <input class="input" id="form-unban-scope" disabled>
             </div>
             <div class="field">
@@ -2810,12 +3168,19 @@
       return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
     };
 
+    const activityCatalog = [
+      { id: "11017", name: "PUBG 夏日集结抽奖", business: "积分商城", status: "进行中", period: "2026-08-20 至 2026-09-15" },
+      { id: "11024", name: "NN 周年庆积分狂欢", business: "NN 活动中心", status: "进行中", period: "2026-09-01 至 2026-09-30" },
+      { id: "10998", name: "雷神会员兑换季", business: "会员权益中心", status: "已结束", period: "2026-05-01 至 2026-05-31" }
+    ];
+
     const strategies = [
-      { id: 1, name: "低频脚本兑换预警", scene: "权益兑换", type: "自动化行为", threshold: "同一用户ID + 设备标识在权益兑换接口连续 5 次请求，间隔稳定在 2.5 至 3.5 秒", disposalActions: ["系统预警", "拦截"], banEntityTypes: [], status: "已启用", updatedAt: "2026-06-02 16:20:00", operator: "管理员", ruleType: "全局规则", mode: "behavior" },
-      { id: 2, name: "同设备极速连抽拦截", scene: "权益入账", type: "设备标识", threshold: "在每日 12:00:00 至 14:00:00 期间，计算去重用户数 > 5", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["设备标识"], status: "已启用", updatedAt: "2026-04-12 10:35:20", operator: "王小明", ruleType: "全局规则", mode: "period" },
-      { id: 3, name: "羊毛党黑产号段熔断", scene: "资格获取", type: "手机号段", threshold: "在 300 秒内，计算总请求次数 > 10", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["手机号段"], status: "已停用", updatedAt: "2026-04-11 09:12:15", operator: "李华", ruleType: "全局规则", mode: "window" },
-      { id: 4, name: "大额权益兑换异常预警", scene: "权益兑换", type: "用户ID", threshold: "在 3600 秒内，计算总请求次数 > 2", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["用户ID", "IP地址"], status: "已启用", updatedAt: "2026-04-10 14:15:00", operator: "王小明", ruleType: "活动规则", mode: "window" },
-      { id: 5, name: "单IP大量领券防刷", scene: "权益入账", type: "IP地址", threshold: "在 86400 秒内，计算去重用户数 > 3", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["IP地址"], status: "已启用", updatedAt: "2026-04-09 16:30:22", operator: "李华", ruleType: "全局规则", mode: "window" }
+      { id: 1, name: "低频脚本兑换预警", scene: "权益兑换", type: "自动化行为", threshold: "同一用户ID + 设备标识在权益兑换接口连续 5 次请求，间隔稳定在 2.5 至 3.5 秒", disposalActions: ["系统预警", "拦截"], banEntityTypes: [], blacklistScope: "", banDuration: "", activityId: "", status: "已启用", updatedAt: "2026-09-02 16:20:00", operator: "管理员", ruleType: "全局规则", mode: "behavior" },
+      { id: 2, name: "同设备极速连抽拦截", scene: "权益入账", type: "设备标识", threshold: "在每日 12:00:00 至 14:00:00 期间，计算去重用户数 > 5", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["设备标识"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityId: "", status: "已启用", updatedAt: "2026-09-01 10:35:20", operator: "王小明", ruleType: "全局规则", mode: "period" },
+      { id: 3, name: "羊毛党黑产号段熔断", scene: "资格获取", type: "手机号段", threshold: "在 300 秒内，计算总请求次数 > 10", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["手机号段"], blacklistScope: "GLOBAL", banDuration: "60天", activityId: "", status: "已停用", updatedAt: "2026-08-28 09:12:15", operator: "李华", ruleType: "全局规则", mode: "window" },
+      { id: 4, name: "PUBG 大额权益兑换异常", scene: "权益兑换", type: "用户ID", threshold: "在 3600 秒内，计算总请求次数 > 2", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["用户ID", "IP地址"], blacklistScope: "GLOBAL", banDuration: "7天", activityId: "11017", status: "已启用", updatedAt: "2026-09-02 14:15:00", operator: "王小明", ruleType: "活动规则", mode: "window" },
+      { id: 5, name: "单IP大量领券防刷", scene: "权益入账", type: "IP地址", threshold: "在 86400 秒内，计算去重用户数 > 3", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["IP地址"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityId: "", status: "已启用", updatedAt: "2026-08-30 16:30:22", operator: "李华", ruleType: "全局规则", mode: "window" },
+      { id: 6, name: "周年庆同设备多账号领奖", scene: "权益兑换", type: "设备标识", threshold: "在 600 秒内，计算去重用户数 > 3", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["设备标识"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityId: "11024", status: "已启用", updatedAt: "2026-09-03 09:40:00", operator: "管理员", ruleType: "活动规则", mode: "window" }
     ];
 
     const rceConfig = {
@@ -2839,11 +3204,15 @@
           { type: "设备ID", value: "d1536fce-8b57-4970-8982-5b2130fbac59" },
           { type: "手机号", value: "13927803052" }
         ],
+        effectScopeType: "GLOBAL",
+        activityId: "",
+        triggerActivityId: "11017",
         scope: "禁止领奖",
         source: "系统同步",
+        sourceStrategy: "RCE Reject · P1处置",
         reason: "RCE风控拒绝",
-        duration: "永久封禁",
-        createdAt: "2026-07-31 10:01:27",
+        duration: "7天",
+        createdAt: "2026-09-02 10:01:27",
         operator: "system"
       },
       {
@@ -2854,11 +3223,15 @@
           { type: "设备ID", value: "987b754a-c063-3c67-e0a6-988371746836" },
           { type: "手机号", value: "17382125815" }
         ],
+        effectScopeType: "ACTIVITY",
+        activityId: "11017",
+        triggerActivityId: "11017",
         scope: "禁止领奖",
         source: "策略触发",
-        reason: "RCE风控拒绝",
-        duration: "永久封禁",
-        createdAt: "2026-07-31 10:00:53",
+        sourceStrategy: "#4 PUBG大额权益兑换异常",
+        reason: "活动内短时间高频兑换大额权益",
+        duration: "30天",
+        createdAt: "2026-09-02 10:00:53",
         operator: "system"
       },
       {
@@ -2869,12 +3242,33 @@
           { type: "设备ID", value: "8c2d16db-ba38-383f-3639-227c7065a520" },
           { type: "手机号段", value: "19299" }
         ],
+        effectScopeType: "ACTIVITY",
+        activityId: "11024",
+        triggerActivityId: "11024",
         scope: "禁止领奖",
         source: "人工添加",
+        sourceStrategy: "-",
         reason: "业务侧排查确认同批风险实体",
         duration: "30天",
-        createdAt: "2026-07-30 18:20:00",
+        createdAt: "2026-09-01 18:20:00",
         operator: "张三"
+      },
+      {
+        id: 4,
+        entities: [
+          { type: "用户ID", value: "137627396" },
+          { type: "设备ID", value: "DEV-LEISHEN-7B2180" }
+        ],
+        effectScopeType: "ACTIVITY",
+        activityId: "10998",
+        triggerActivityId: "10998",
+        scope: "禁止领奖",
+        source: "策略触发",
+        sourceStrategy: "#8 会员兑换设备聚集",
+        reason: "同一设备关联多个账号兑换会员权益",
+        duration: "30天",
+        createdAt: "2026-05-12 14:18:00",
+        operator: "系统自动"
       }
     ];
 
@@ -2882,6 +3276,8 @@
       {
         value: "170001708",
         type: "用户ID",
+        effectScopeType: "ACTIVITY",
+        activityId: "11017",
         scope: "禁止领奖",
         source: "策略触发",
         reason: "IP领奖高频拦截策略",
@@ -2894,6 +3290,8 @@
       {
         value: "172.16.3.88",
         type: "IP地址",
+        effectScopeType: "ACTIVITY",
+        activityId: "11017",
         scope: "禁止领奖",
         source: "策略触发",
         reason: "IP领奖高频拦截策略",
@@ -2906,6 +3304,8 @@
       {
         value: "DEV-ACTIVITY-00342",
         type: "设备ID",
+        effectScopeType: "ACTIVITY",
+        activityId: "11017",
         scope: "禁止领奖",
         source: "策略触发",
         reason: "IP领奖高频拦截策略",
@@ -2918,6 +3318,8 @@
       {
         value: "10098231",
         type: "用户ID",
+        effectScopeType: "GLOBAL",
+        activityId: "",
         scope: "禁止领奖",
         source: "人工添加",
         reason: "业务侧排查确认恶意刷单",
@@ -2930,6 +3332,8 @@
       {
         value: "13843420021",
         type: "手机号",
+        effectScopeType: "GLOBAL",
+        activityId: "",
         scope: "禁止领奖",
         source: "人工添加",
         reason: "业务侧排查确认恶意刷单",
@@ -3178,6 +3582,65 @@
       return `<span class="tag ${type}">${escapeHtml(source)}</span>`;
     }
 
+    function getActivity(activityId) {
+      return activityCatalog.find(activity => activity.id === String(activityId || ""));
+    }
+
+    function getActivityLabel(activityId, includePeriod = false) {
+      const activity = getActivity(activityId);
+      if (!activity) return "-";
+      return includePeriod
+        ? `${activity.name}（${activity.id}）· ${activity.period}`
+        : `${activity.name}（${activity.id}）`;
+    }
+
+    function renderActivityMeta(containerId, activityId) {
+      const container = $(`#${containerId}`);
+      if (!container) return;
+      const activity = getActivity(activityId);
+      container.innerHTML = activity ? `
+        <span>活动ID：${escapeHtml(activity.id)}</span>
+        <span>业务：${escapeHtml(activity.business)}</span>
+        <span>状态：${escapeHtml(activity.status)}</span>
+        <span>活动周期：${escapeHtml(activity.period)}</span>
+      ` : "";
+    }
+
+    function renderStrategyScopeCell(item) {
+      if (item.ruleType === "活动规则") {
+        const activity = getActivity(item.activityId);
+        return `<td><div class="scope-cell"><span class="tag tag-blue">指定活动</span><strong>${escapeHtml(activity?.name || "未绑定活动")}</strong><small>${activity ? `ID ${activity.id} · ${activity.business}` : "请补充活动ID"}</small></div></td>`;
+      }
+      return `<td><div class="scope-cell"><span class="tag tag-purple">全局</span><strong>全部营销活动</strong><small>跨活动执行检测</small></div></td>`;
+    }
+
+    function renderStrategyBlacklistScope(item) {
+      if (!item.disposalActions.includes("加入黑名单")) return "-";
+      if (item.blacklistScope === "GLOBAL") {
+        return `<div class="scope-cell"><span class="tag tag-purple">全局活动黑名单</span><small>${escapeHtml(item.banDuration || "-")} · 与检测范围解耦</small></div>`;
+      }
+      return `<div class="scope-cell"><span class="tag tag-blue">当前活动黑名单</span><small>${escapeHtml(item.banDuration || "-")} · 按请求活动隔离</small></div>`;
+    }
+
+    function getEffectScopeText(record) {
+      return record.effectScopeType === "ACTIVITY"
+        ? `指定活动 · ${getActivityLabel(record.activityId)}`
+        : "全部营销活动";
+    }
+
+    function renderEffectScopeCell(record) {
+      return record.effectScopeType === "ACTIVITY"
+        ? `<td><div class="scope-cell"><span class="tag tag-blue">指定活动</span><small>仅该活动生效</small></div></td>`
+        : `<td><div class="scope-cell"><span class="tag tag-purple">全局活动</span><small>全部活动生效</small></div></td>`;
+    }
+
+    function renderActivityCell(record) {
+      const activity = getActivity(record.activityId);
+      return activity
+        ? `<td><div class="scope-cell"><strong>${escapeHtml(activity.name)}</strong><small>ID ${activity.id} · ${activity.business}</small></div></td>`
+        : `<td><div class="scope-cell"><strong>全部营销活动</strong><small>无单一活动绑定</small></div></td>`;
+    }
+
     function getEntityValue(record, type) {
       const entity = record.entities.find(item => item.type === type);
       return entity ? entity.value : "-";
@@ -3274,10 +3737,14 @@
 
     function renderStrategies() {
       const keyword = $("#strategy-keyword").value.trim().toLowerCase();
+      const scope = $("#strategy-scope").value;
+      const activityId = $("#strategy-activity").value;
       const scene = $("#strategy-scene").value;
       const type = $("#strategy-type").value;
       const list = strategies.filter(item =>
         (!keyword || item.name.toLowerCase().includes(keyword)) &&
+        (!scope || item.ruleType === scope) &&
+        (!activityId || item.activityId === activityId) &&
         (!scene || item.scene === scene) &&
         (!type || item.type === type)
       );
@@ -3286,10 +3753,12 @@
         <tr>
           <td>${item.id}</td>
           <td><strong>${escapeHtml(item.name)}</strong></td>
+          ${renderStrategyScopeCell(item)}
           <td><span class="tag tag-orange">${escapeHtml(item.scene)}</span></td>
           <td>${escapeHtml(item.type)}</td>
           <td><div class="threshold">${escapeHtml(item.threshold)}</div></td>
           <td><div class="strategy-tag-list">${item.disposalActions.map(action => `<span class="tag ${action === "系统预警" ? "tag-orange" : action === "拦截" ? "tag-red" : "tag-blue"}">${escapeHtml(action)}</span>`).join("")}</div></td>
+          <td>${renderStrategyBlacklistScope(item)}</td>
           <td><div class="strategy-tag-list">${item.banEntityTypes.length ? item.banEntityTypes.map(type => `<span class="tag tag-gray">${escapeHtml(type)}</span>`).join("") : "-"}</div></td>
           <td>${statusTag(item.status)}</td>
           <td>${escapeHtml(item.updatedAt)}</td>
@@ -3302,46 +3771,63 @@
             </div>
           </td>
         </tr>
-      `).join("") : `<tr><td colspan="11"><div class="empty">未查询到匹配的反作弊策略</div></td></tr>`;
+      `).join("") : `<tr><td colspan="13"><div class="empty">未查询到匹配的反作弊策略</div></td></tr>`;
       $("#strategy-count").textContent = `共 ${list.length} 条数据`;
     }
 
     function renderBlacklists() {
       const keyword = $("#blacklist-keyword").value.trim().toLowerCase();
+      const effectScopeType = $("#blacklist-effect-scope").value;
+      const activityId = $("#blacklist-activity").value;
       const type = $("#blacklist-type").value;
       const source = $("#blacklist-source").value;
       const list = blacklists.filter(item =>
         recordMatchesEntity(item, keyword, type) &&
+        (!effectScopeType || item.effectScopeType === effectScopeType) &&
+        (!activityId || item.activityId === activityId) &&
         (!source || item.source === source)
       );
+
+      $("#blacklist-global-summary").textContent = blacklists.filter(item => item.effectScopeType === "GLOBAL").length;
+      $("#blacklist-activity-summary").textContent = blacklists.filter(item => item.effectScopeType === "ACTIVITY").length;
+      $("#blacklist-covered-activity-summary").textContent = new Set(blacklists.filter(item => item.effectScopeType === "ACTIVITY").map(item => item.activityId)).size;
 
       $("#blacklist-body").innerHTML = list.length ? list.map(item => `
         <tr>
           ${renderEntityCells(item)}
           ${renderEntityTypeCell(item)}
+          ${renderEffectScopeCell(item)}
+          ${renderActivityCell(item)}
           <td>${escapeHtml(item.scope)}</td>
           <td>${sourceTag(item.source)}</td>
+          <td><div class="text-wrap">${escapeHtml(item.sourceStrategy || "-")}</div></td>
           <td><div class="text-wrap">${escapeHtml(item.reason)}</div></td>
           <td>${escapeHtml(item.duration)}</td>
           <td>${escapeHtml(item.createdAt)}</td>
           <td>${escapeHtml(item.operator)}</td>
           <td><button class="action-link danger" data-action="unban" data-id="${item.id}">解封</button></td>
         </tr>
-      `).join("") : `<tr><td colspan="13"><div class="empty">未查询到匹配的活动黑名单记录</div></td></tr>`;
+      `).join("") : `<tr><td colspan="16"><div class="empty">未查询到匹配的活动黑名单记录</div></td></tr>`;
       $("#blacklist-count").textContent = `共 ${list.length} 条记录`;
     }
 
     function renderUnbanRecords() {
       const keyword = $("#unban-keyword").value.trim().toLowerCase();
+      const effectScopeType = $("#unban-effect-scope").value;
+      const activityId = $("#unban-activity").value;
       const type = $("#unban-type").value;
       const list = unbanRecords.filter(item =>
         (!keyword || item.value.toLowerCase().includes(keyword)) &&
+        (!effectScopeType || item.effectScopeType === effectScopeType) &&
+        (!activityId || item.activityId === activityId) &&
         (!type || item.type === type)
       );
       $("#unban-body").innerHTML = list.length ? list.map(item => `
         <tr>
           <td><strong class="entity-cell">${escapeHtml(item.value)}</strong></td>
           <td><span class="tag tag-blue">${escapeHtml(item.type)}</span></td>
+          ${renderEffectScopeCell(item)}
+          ${renderActivityCell(item)}
           <td>${escapeHtml(item.scope)}</td>
           <td>${sourceTag(item.source)}</td>
           <td><div class="text-wrap">${escapeHtml(item.reason)}</div></td>
@@ -3351,7 +3837,7 @@
           <td>${escapeHtml(item.unbanAt)}</td>
           <td>${escapeHtml(item.operator)}</td>
         </tr>
-      `).join("") : `<tr><td colspan="10"><div class="empty">未查询到匹配的活动黑名单解封记录</div></td></tr>`;
+      `).join("") : `<tr><td colspan="12"><div class="empty">未查询到匹配的活动黑名单解封记录</div></td></tr>`;
       $("#unban-count").textContent = `共 ${list.length} 条记录`;
     }
 
@@ -3644,6 +4130,27 @@
       syncStrategyConditionMode();
     }
 
+    function syncStrategyDispositionPreview() {
+      const isActivityRule = $("#form-rule-type").value === "活动规则";
+      const activity = getActivity($("#form-strategy-activity").value);
+      const blacklistScope = $("#form-ban-scope").value;
+      $("#strategy-detect-scope-preview").textContent = isActivityRule
+        ? (activity ? `${activity.name}（${activity.id}）` : "指定活动（待选择）")
+        : "全部营销活动";
+      $("#strategy-ban-scope-preview").textContent = blacklistScope === "GLOBAL"
+        ? "全部营销活动"
+        : (isActivityRule && activity ? `${activity.name}（${activity.id}）` : "当前请求所属活动");
+      $("#strategy-global-ban-warning").hidden = blacklistScope !== "GLOBAL";
+    }
+
+    function syncStrategyScopeConfig() {
+      const isActivityRule = $("#form-rule-type").value === "活动规则";
+      $("#strategy-activity-config").hidden = !isActivityRule;
+      renderActivityMeta("strategy-activity-meta", isActivityRule ? $("#form-strategy-activity").value : "");
+      syncStrategyDispositionPreview();
+      syncCustomSelects();
+    }
+
     function resetStrategyForm() {
       $("#strategy-form").reset();
       $("#strategy-edit-id").value = "";
@@ -3657,6 +4164,9 @@
       syncBusinessMetricCascade("period");
       syncCompareFieldOptions();
       $("#blacklist-config").hidden = false;
+      $("#form-strategy-activity").value = "";
+      $("#form-ban-scope").value = "CURRENT_ACTIVITY";
+      syncStrategyScopeConfig();
       syncCustomSelects();
     }
 
@@ -3668,6 +4178,7 @@
       $("#strategy-modal-title").textContent = "编辑风控策略";
       $("#form-strategy-name").value = item.name;
       $("#form-rule-type").value = item.ruleType;
+      $("#form-strategy-activity").value = item.activityId || "";
       $("#form-scene").value = item.scene;
       $("#form-risk-type").value = item.type;
       const judgmentType = item.judgmentType || (item.mode === "compare" ? "compare" : "threshold");
@@ -3685,12 +4196,15 @@
       const blacklistEnabled = item.disposalActions.includes("加入黑名单");
       $("#form-blacklist").checked = blacklistEnabled;
       $("#blacklist-config").hidden = !blacklistEnabled;
+      $("#form-ban-scope").value = item.blacklistScope || "CURRENT_ACTIVITY";
+      $("#form-ban-duration").value = item.banDuration || "30天";
       $$("#entity-checks input").forEach(input => {
         input.checked = item.banEntityTypes.includes(input.value);
       });
       setAutomationMode(item.mode === "behavior");
       if (item.mode !== "behavior" && item.mode !== "compare") setThresholdMode(item.mode || "window");
       setJudgmentMode(judgmentType);
+      syncStrategyScopeConfig();
       syncCustomSelects();
       openModal("strategy-modal");
     }
@@ -3701,6 +4215,12 @@
       const entities = $$("#entity-checks input:checked").map(input => input.value);
       if (!name) {
         showToast("请填写策略名称");
+        return;
+      }
+      const ruleType = $("#form-rule-type").value;
+      const activityId = ruleType === "活动规则" ? $("#form-strategy-activity").value : "";
+      if (ruleType === "活动规则" && !activityId) {
+        showToast("请选择策略绑定的活动");
         return;
       }
       if (blacklistEnabled && !entities.length) {
@@ -3742,12 +4262,15 @@
       const banEntityTypes = blacklistEnabled ? entities : [];
       const data = {
         name,
-        ruleType: $("#form-rule-type").value,
+        ruleType,
+        activityId,
         scene: $("#form-scene").value,
         type: $("#form-risk-type").value,
         threshold,
         disposalActions,
         banEntityTypes,
+        blacklistScope: blacklistEnabled ? $("#form-ban-scope").value : "",
+        banDuration: blacklistEnabled ? $("#form-ban-duration").value : "",
         status: $("#form-status").value,
         updatedAt: nowText(),
         operator: "管理员",
@@ -3870,6 +4393,20 @@
       clearMultiBlacklistResult(kind);
     }
 
+    function syncActivityBlacklistScopeConfig() {
+      const effectScopeType = $("#form-blacklist-effect-scope").value;
+      const isActivityScope = effectScopeType === "ACTIVITY";
+      $("#form-blacklist-activity-field").hidden = !isActivityScope;
+      const activityId = isActivityScope ? $("#form-blacklist-activity").value : "";
+      const activity = getActivity(activityId);
+      $("#blacklist-effect-scope-preview").textContent = isActivityScope
+        ? (activity ? `${activity.name}（${activity.id}）` : "指定活动（待选择）")
+        : "全部营销活动";
+      $("#blacklist-global-warning").hidden = effectScopeType !== "GLOBAL";
+      renderActivityMeta("blacklist-activity-meta", activityId);
+      syncCustomSelects();
+    }
+
     function resetMultiBlacklistForm(kind) {
       const config = multiBlacklistFormConfig[kind];
       $(`#${config.formId}`).reset();
@@ -3889,6 +4426,9 @@
 
     function resetActivityBlacklistForm() {
       resetMultiBlacklistForm("activity");
+      $("#form-blacklist-effect-scope").value = "ACTIVITY";
+      $("#form-blacklist-activity").value = "";
+      syncActivityBlacklistScopeConfig();
     }
 
     function resetLoginBlacklistForm() {
@@ -3919,7 +4459,7 @@
       }));
     }
 
-    function validateMultiBlacklistEntities(kind, entities) {
+    function validateMultiBlacklistEntities(kind, entities, scopeContext = {}) {
       const records = kind === "activity" ? blacklists : loginBlacklists;
       const failures = [];
       const seenTypes = new Set();
@@ -3937,11 +4477,15 @@
         } else {
           seenTypes.add(entity.type);
         }
-        if (records.some(record =>
-          record.entities.some(item =>
+        if (records.some(record => {
+          const sameScope = kind !== "activity" || (
+            record.effectScopeType === scopeContext.effectScopeType &&
+            (scopeContext.effectScopeType !== "ACTIVITY" || record.activityId === scopeContext.activityId)
+          );
+          return sameScope && record.entities.some(item =>
             item.type === entity.type && item.value.toLowerCase() === entity.value.toLowerCase()
-          )
-        )) {
+          );
+        })) {
           failures.push(`${position}：该${entity.type}已存在于生效中的${kind === "activity" ? "活动" : "登录"}黑名单记录`);
         }
       });
@@ -3952,6 +4496,8 @@
       const isActivity = kind === "activity";
       const entities = collectMultiBlacklistEntities(kind);
       const reason = $(isActivity ? "#form-blacklist-reason" : "#form-login-blacklist-reason").value.trim();
+      const effectScopeType = isActivity ? $("#form-blacklist-effect-scope").value : "";
+      const activityId = isActivity && effectScopeType === "ACTIVITY" ? $("#form-blacklist-activity").value : "";
       if (!entities.length) {
         showMultiBlacklistResult(kind, "请至少添加一个封禁实体");
         return;
@@ -3960,8 +4506,12 @@
         showMultiBlacklistResult(kind, "请填写封禁原因");
         return;
       }
+      if (isActivity && effectScopeType === "ACTIVITY" && !activityId) {
+        showMultiBlacklistResult(kind, "请选择名单适用的活动");
+        return;
+      }
 
-      const failures = validateMultiBlacklistEntities(kind, entities);
+      const failures = validateMultiBlacklistEntities(kind, entities, { effectScopeType, activityId });
       if (failures.length) {
         showMultiBlacklistResult(kind, "整条记录未保存，请处理以下问题：", failures);
         return;
@@ -3973,6 +4523,12 @@
       records.unshift({
         id: Math.max(...records.map(item => item.id), 0) + 1,
         entities: entities.map(entity => ({ ...entity })),
+        ...(isActivity ? {
+          effectScopeType,
+          activityId,
+          triggerActivityId: activityId,
+          sourceStrategy: "-"
+        } : {}),
         scope: isActivity ? "禁止领奖" : "禁止登录",
         source: "人工添加",
         reason,
@@ -3986,7 +4542,10 @@
       } else {
         renderLoginBlacklists();
       }
-      showToast(`已新增 1 条${isActivity ? "活动" : "登录"}黑名单记录，包含 ${entities.length} 个实体`);
+      const scopeText = isActivity
+        ? (effectScopeType === "GLOBAL" ? "全局活动" : getActivityLabel(activityId))
+        : "登录";
+      showToast(`已新增 1 条${scopeText}黑名单记录，包含 ${entities.length} 个实体`);
     }
 
     function saveLoginBlacklist() {
@@ -4005,6 +4564,7 @@
         selectAll: $(`#${prefix}unban-select-all`),
         options: $(`#${prefix}unban-entity-options`),
         error: $(`#${prefix}unban-entity-error`),
+        effectScope: kind === "activity" ? $("#form-unban-effect-scope") : null,
         scope: $(`#form-${prefix}unban-scope`),
         source: $(`#form-${prefix}unban-source`),
         originalReason: $(`#form-${prefix}unban-reason-origin`),
@@ -4060,6 +4620,7 @@
       ui.form.reset();
       ui.recordId.value = item.id;
       renderUnbanEntityOptions(kind, item);
+      if (ui.effectScope) ui.effectScope.value = getEffectScopeText(item);
       ui.scope.value = item.scope;
       ui.source.value = item.source;
       ui.originalReason.value = item.reason;
@@ -4093,6 +4654,10 @@
       const newHistoryRecords = selectedEntities.map(entity => ({
         value: entity.value,
         type: entity.type,
+        ...(kind === "activity" ? {
+          effectScopeType: item.effectScopeType,
+          activityId: item.activityId
+        } : {}),
         scope: item.scope,
         source: item.source,
         reason: item.reason,
@@ -4162,12 +4727,15 @@
 
     function exportBlacklists() {
       const rows = [
-        ["用户ID", "IP", "设备ID", "手机号", "手机号段", "实体类型", "封禁范围", "数据来源", "封禁原因", "封禁时长", "封禁时间", "操作人"],
+        ["用户ID", "IP", "设备ID", "手机号", "手机号段", "实体类型", "名单生效范围", "适用活动ID", "限制动作", "数据来源", "来源策略", "封禁原因", "封禁时长", "封禁时间", "操作人"],
         ...blacklists.map(item => [
           ...entityCsvColumns(item),
           getEntityTypeText(item),
+          item.effectScopeType === "GLOBAL" ? "全局活动" : "指定活动",
+          item.activityId || "",
           item.scope,
           item.source,
+          item.sourceStrategy || "-",
           item.reason,
           item.duration,
           item.createdAt,
@@ -4291,6 +4859,16 @@
       syncCustomSelects();
     });
 
+    $("#form-rule-type").addEventListener("change", syncStrategyScopeConfig);
+    $("#form-strategy-activity").addEventListener("change", () => {
+      renderActivityMeta("strategy-activity-meta", $("#form-strategy-activity").value);
+      syncStrategyDispositionPreview();
+    });
+    $("#form-ban-scope").addEventListener("change", syncStrategyDispositionPreview);
+
+    $("#form-blacklist-effect-scope").addEventListener("change", syncActivityBlacklistScopeConfig);
+    $("#form-blacklist-activity").addEventListener("change", syncActivityBlacklistScopeConfig);
+
     $("#form-compare-left-field").addEventListener("change", () => {
       syncCompareFieldOptions("left");
       syncCustomSelects();
@@ -4316,6 +4894,7 @@
 
     $("#form-blacklist").addEventListener("change", event => {
       $("#blacklist-config").hidden = !event.target.checked;
+      if (event.target.checked) syncStrategyDispositionPreview();
     });
 
     $("#strategy-body").addEventListener("click", event => {
@@ -4442,6 +5021,8 @@
 
     $("#strategy-reset").addEventListener("click", () => {
       $("#strategy-keyword").value = "";
+      $("#strategy-scope").value = "";
+      $("#strategy-activity").value = "";
       $("#strategy-scene").value = "";
       $("#strategy-type").value = "";
       syncCustomSelects();
@@ -4450,6 +5031,8 @@
 
     $("#blacklist-reset").addEventListener("click", () => {
       $("#blacklist-keyword").value = "";
+      $("#blacklist-effect-scope").value = "";
+      $("#blacklist-activity").value = "";
       $("#blacklist-type").value = "";
       $("#blacklist-source").value = "";
       syncCustomSelects();
@@ -4458,6 +5041,8 @@
 
     $("#unban-reset").addEventListener("click", () => {
       $("#unban-keyword").value = "";
+      $("#unban-effect-scope").value = "";
+      $("#unban-activity").value = "";
       $("#unban-type").value = "";
       syncCustomSelects();
       renderUnbanRecords();
