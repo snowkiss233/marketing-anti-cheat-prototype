@@ -1451,6 +1451,10 @@
       font-size: 11px;
     }
 
+    .activity-info strong {
+      margin-top: 0;
+    }
+
     .tag-purple {
       color: #7c3aed;
       background: #f3e8ff;
@@ -1773,7 +1777,7 @@
                     <th>ID</th>
                     <th>策略名称</th>
                     <th>策略范围</th>
-                    <th>活动ID</th>
+                    <th>活动信息</th>
                     <th>触发场景</th>
                     <th>风控类型</th>
                     <th>判定条件</th>
@@ -2157,7 +2161,7 @@
                       <th>手机号段</th>
                       <th>实体类型</th>
                       <th>名单生效范围</th>
-                      <th>活动ID</th>
+                      <th>活动信息</th>
                       <th>限制动作</th>
                       <th>数据来源</th>
                       <th>来源策略</th>
@@ -2229,7 +2233,7 @@
                       <th>实体值</th>
                       <th>实体类型</th>
                       <th>原名单生效范围</th>
-                      <th>原活动ID</th>
+                      <th>原活动信息</th>
                       <th>原限制动作</th>
                       <th>原封禁来源</th>
                       <th>原封禁原因</th>
@@ -2524,14 +2528,18 @@
               </div>
             </div>
             <div class="scope-config-card" id="strategy-activity-config" hidden>
-              <div class="scope-config-title">绑定活动ID</div>
-              <div class="form-grid single">
+              <div class="scope-config-title">绑定活动</div>
+              <div class="form-grid">
+                <div class="field">
+                  <label class="required">活动名称</label>
+                  <input class="input" id="form-strategy-activity-name" maxlength="100" placeholder="请输入活动名称，例如：PUBG 夏日集结抽奖">
+                </div>
                 <div class="field">
                   <label class="required">活动ID</label>
                   <input class="input" id="form-strategy-activity" maxlength="64" placeholder="请输入业务请求中的活动ID，例如：11017">
                 </div>
               </div>
-              <div class="strategy-hint">系统仅按活动 ID 进行策略绑定和阈值隔离，不校验或维护活动名称、所属业务及活动周期。</div>
+              <div class="strategy-hint">活动 ID 作为策略匹配、阈值隔离和活动黑名单生成的唯一键；活动名称仅用于后台识别展示，并随策略保存为快照。</div>
             </div>
           </div>
 
@@ -2672,7 +2680,7 @@
               <input type="checkbox" id="form-blacklist" checked>
               <span>
                 <span class="check-title">加入黑名单</span>
-                <div class="check-note">策略命中时写入名单服务；活动黑名单自动继承该策略绑定的活动 ID。</div>
+                <div class="check-note">策略命中时写入名单服务；活动黑名单自动继承该策略的活动名称和活动 ID，其中活动 ID 用作匹配键。</div>
               </span>
             </label>
             <div class="nested-card" id="blacklist-config">
@@ -2706,7 +2714,7 @@
                 <div class="scope-flow-arrow">→</div>
                 <div class="scope-flow-node highlight">
                   <small>命中后的名单生效范围</small>
-                  <strong id="strategy-ban-scope-preview">活动黑名单 · 等待活动ID</strong>
+                  <strong id="strategy-ban-scope-preview">活动黑名单 · 活动名称待输入（ID 待输入）</strong>
                 </div>
               </div>
               <div class="scope-warning" id="strategy-global-ban-warning" hidden>全局活动黑名单将影响该实体参与全部营销活动。该处置与策略检测范围无强绑定，上线时建议增加高级权限及二次确认。</div>
@@ -2754,12 +2762,16 @@
             <h3 class="section-title">生效范围</h3>
             <div class="scope-config-card" style="margin-top: 0;">
               <div class="form-grid">
-                <div class="field">
+                <div class="field" style="grid-column: 1 / -1;">
                   <label class="required">名单生效范围</label>
                   <select class="select" id="form-blacklist-effect-scope">
                     <option value="ACTIVITY" selected>活动黑名单</option>
                     <option value="GLOBAL">全局活动黑名单</option>
                   </select>
+                </div>
+                <div class="field" id="form-blacklist-activity-name-field">
+                  <label class="required">活动名称</label>
+                  <input class="input" id="form-blacklist-activity-name" maxlength="100" placeholder="请输入活动名称，例如：PUBG 夏日集结抽奖">
                 </div>
                 <div class="field" id="form-blacklist-activity-field">
                   <label class="required">活动ID</label>
@@ -2774,7 +2786,7 @@
                 <div class="scope-flow-arrow">→</div>
                 <div class="scope-flow-node highlight">
                   <small>实际生效范围</small>
-                  <strong id="blacklist-effect-scope-preview">活动黑名单 · 等待活动ID</strong>
+                  <strong id="blacklist-effect-scope-preview">活动黑名单 · 活动名称待输入（ID 待输入）</strong>
                 </div>
               </div>
               <div class="scope-warning" id="blacklist-global-warning" hidden>该记录将对全部营销活动生效。同一实体已有的活动名单不会被覆盖，两类名单将分别保留审计和解封记录。</div>
@@ -3122,12 +3134,12 @@
     };
 
     const strategies = [
-      { id: 1, name: "低频脚本兑换预警", scene: "权益兑换", type: "自动化行为", threshold: "同一用户ID + 设备标识在权益兑换接口连续 5 次请求，间隔稳定在 2.5 至 3.5 秒", disposalActions: ["系统预警", "拦截"], banEntityTypes: [], blacklistScope: "", banDuration: "", activityId: "", status: "已启用", updatedAt: "2026-09-02 16:20:00", operator: "管理员", ruleType: "全局规则", mode: "behavior" },
-      { id: 2, name: "同设备极速连抽拦截", scene: "权益入账", type: "设备标识", threshold: "在每日 12:00:00 至 14:00:00 期间，计算去重用户数 > 5", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["设备标识"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityId: "", status: "已启用", updatedAt: "2026-09-01 10:35:20", operator: "王小明", ruleType: "全局规则", mode: "period" },
-      { id: 3, name: "羊毛党黑产号段熔断", scene: "资格获取", type: "手机号段", threshold: "在 300 秒内，计算总请求次数 > 10", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["手机号段"], blacklistScope: "GLOBAL", banDuration: "60天", activityId: "", status: "已停用", updatedAt: "2026-08-28 09:12:15", operator: "李华", ruleType: "全局规则", mode: "window" },
-      { id: 4, name: "PUBG 大额权益兑换异常", scene: "权益兑换", type: "用户ID", threshold: "在 3600 秒内，计算总请求次数 > 2", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["用户ID", "IP地址"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityId: "11017", status: "已启用", updatedAt: "2026-09-02 14:15:00", operator: "王小明", ruleType: "活动规则", mode: "window" },
-      { id: 5, name: "单IP大量领券防刷", scene: "权益入账", type: "IP地址", threshold: "在 86400 秒内，计算去重用户数 > 3", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["IP地址"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityId: "", status: "已启用", updatedAt: "2026-08-30 16:30:22", operator: "李华", ruleType: "全局规则", mode: "window" },
-      { id: 6, name: "周年庆同设备多账号领奖", scene: "权益兑换", type: "设备标识", threshold: "在 600 秒内，计算去重用户数 > 3", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["设备标识"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityId: "11024", status: "已启用", updatedAt: "2026-09-03 09:40:00", operator: "管理员", ruleType: "活动规则", mode: "window" }
+      { id: 1, name: "低频脚本兑换预警", scene: "权益兑换", type: "自动化行为", threshold: "同一用户ID + 设备标识在权益兑换接口连续 5 次请求，间隔稳定在 2.5 至 3.5 秒", disposalActions: ["系统预警", "拦截"], banEntityTypes: [], blacklistScope: "", banDuration: "", activityName: "", activityId: "", status: "已启用", updatedAt: "2026-09-02 16:20:00", operator: "管理员", ruleType: "全局规则", mode: "behavior" },
+      { id: 2, name: "同设备极速连抽拦截", scene: "权益入账", type: "设备标识", threshold: "在每日 12:00:00 至 14:00:00 期间，计算去重用户数 > 5", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["设备标识"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityName: "", activityId: "", status: "已启用", updatedAt: "2026-09-01 10:35:20", operator: "王小明", ruleType: "全局规则", mode: "period" },
+      { id: 3, name: "羊毛党黑产号段熔断", scene: "资格获取", type: "手机号段", threshold: "在 300 秒内，计算总请求次数 > 10", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["手机号段"], blacklistScope: "GLOBAL", banDuration: "60天", activityName: "", activityId: "", status: "已停用", updatedAt: "2026-08-28 09:12:15", operator: "李华", ruleType: "全局规则", mode: "window" },
+      { id: 4, name: "PUBG 大额权益兑换异常", scene: "权益兑换", type: "用户ID", threshold: "在 3600 秒内，计算总请求次数 > 2", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["用户ID", "IP地址"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityName: "PUBG 夏日集结抽奖", activityId: "11017", status: "已启用", updatedAt: "2026-09-02 14:15:00", operator: "王小明", ruleType: "活动规则", mode: "window" },
+      { id: 5, name: "单IP大量领券防刷", scene: "权益入账", type: "IP地址", threshold: "在 86400 秒内，计算去重用户数 > 3", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["IP地址"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityName: "", activityId: "", status: "已启用", updatedAt: "2026-08-30 16:30:22", operator: "李华", ruleType: "全局规则", mode: "window" },
+      { id: 6, name: "周年庆同设备多账号领奖", scene: "权益兑换", type: "设备标识", threshold: "在 600 秒内，计算去重用户数 > 3", disposalActions: ["系统预警", "拦截", "加入黑名单"], banEntityTypes: ["设备标识"], blacklistScope: "CURRENT_ACTIVITY", banDuration: "30天", activityName: "NN 周年庆积分狂欢", activityId: "11024", status: "已启用", updatedAt: "2026-09-03 09:40:00", operator: "管理员", ruleType: "活动规则", mode: "window" }
     ];
 
     const rceConfig = {
@@ -3152,6 +3164,7 @@
           { type: "手机号", value: "13927803052" }
         ],
         effectScopeType: "GLOBAL",
+        activityName: "",
         activityId: "",
         triggerActivityId: "11017",
         scope: "禁止领奖",
@@ -3171,6 +3184,7 @@
           { type: "手机号", value: "17382125815" }
         ],
         effectScopeType: "ACTIVITY",
+        activityName: "PUBG 夏日集结抽奖",
         activityId: "11017",
         triggerActivityId: "11017",
         scope: "禁止领奖",
@@ -3190,6 +3204,7 @@
           { type: "手机号段", value: "19299" }
         ],
         effectScopeType: "ACTIVITY",
+        activityName: "NN 周年庆积分狂欢",
         activityId: "11024",
         triggerActivityId: "11024",
         scope: "禁止领奖",
@@ -3207,6 +3222,7 @@
           { type: "设备ID", value: "DEV-LEISHEN-7B2180" }
         ],
         effectScopeType: "ACTIVITY",
+        activityName: "雷神会员兑换季",
         activityId: "10998",
         triggerActivityId: "10998",
         scope: "禁止领奖",
@@ -3224,6 +3240,7 @@
         value: "170001708",
         type: "用户ID",
         effectScopeType: "ACTIVITY",
+        activityName: "PUBG 夏日集结抽奖",
         activityId: "11017",
         scope: "禁止领奖",
         source: "策略触发",
@@ -3238,6 +3255,7 @@
         value: "172.16.3.88",
         type: "IP地址",
         effectScopeType: "ACTIVITY",
+        activityName: "PUBG 夏日集结抽奖",
         activityId: "11017",
         scope: "禁止领奖",
         source: "策略触发",
@@ -3252,6 +3270,7 @@
         value: "DEV-ACTIVITY-00342",
         type: "设备ID",
         effectScopeType: "ACTIVITY",
+        activityName: "PUBG 夏日集结抽奖",
         activityId: "11017",
         scope: "禁止领奖",
         source: "策略触发",
@@ -3266,6 +3285,7 @@
         value: "10098231",
         type: "用户ID",
         effectScopeType: "GLOBAL",
+        activityName: "",
         activityId: "",
         scope: "禁止领奖",
         source: "人工添加",
@@ -3280,6 +3300,7 @@
         value: "13843420021",
         type: "手机号",
         effectScopeType: "GLOBAL",
+        activityName: "",
         activityId: "",
         scope: "禁止领奖",
         source: "人工添加",
@@ -3534,7 +3555,7 @@
         ? `<td><span class="tag tag-blue">指定活动</span></td>`
         : `<td><span class="tag tag-purple">全局</span></td>`;
       const activityCell = item.ruleType === "活动规则"
-        ? `<td><strong>${escapeHtml(item.activityId || "-")}</strong></td>`
+        ? `<td><div class="scope-cell activity-info"><strong>${escapeHtml(item.activityName || "-")}</strong><small>ID ${escapeHtml(item.activityId || "-")}</small></div></td>`
         : `<td>-</td>`;
       return scopeCell + activityCell;
     }
@@ -3549,7 +3570,7 @@
 
     function getEffectScopeText(record) {
       return record.effectScopeType === "ACTIVITY"
-        ? `活动黑名单 · 活动ID ${record.activityId || "-"}`
+        ? `活动黑名单 · ${record.activityName || "活动名称未记录"}（ID ${record.activityId || "-"}）`
         : "全部营销活动";
     }
 
@@ -3561,7 +3582,7 @@
 
     function renderActivityCell(record) {
       return record.effectScopeType === "ACTIVITY"
-        ? `<td><strong>${escapeHtml(record.activityId || "-")}</strong></td>`
+        ? `<td><div class="scope-cell activity-info"><strong>${escapeHtml(record.activityName || "-")}</strong><small>ID ${escapeHtml(record.activityId || "-")}</small></div></td>`
         : `<td>-</td>`;
     }
 
@@ -4056,14 +4077,15 @@
 
     function syncStrategyDispositionPreview() {
       const isActivityRule = $("#form-rule-type").value === "活动规则";
+      const activityName = $("#form-strategy-activity-name").value.trim();
       const activityId = $("#form-strategy-activity").value.trim();
       const blacklistScope = $("#form-ban-scope").value;
       $("#strategy-detect-scope-preview").textContent = isActivityRule
-        ? `活动ID ${activityId || "待输入"}`
+        ? `${activityName || "活动名称待输入"} · ID ${activityId || "待输入"}`
         : "全部营销活动";
       $("#strategy-ban-scope-preview").textContent = blacklistScope === "GLOBAL"
         ? "全局活动黑名单"
-        : (isActivityRule ? `活动黑名单 · 活动ID ${activityId || "待输入"}` : "活动黑名单 · 按请求活动ID生成");
+        : (isActivityRule ? `活动黑名单 · ${activityName || "活动名称待输入"}（ID ${activityId || "待输入"}）` : "活动黑名单 · 按请求活动ID生成");
       const activityScopeOption = [...$("#form-ban-scope").options].find(option => option.value === "CURRENT_ACTIVITY");
       activityScopeOption.textContent = isActivityRule
         ? `活动黑名单（继承活动ID${activityId ? ` ${activityId}` : ""}）`
@@ -4094,6 +4116,7 @@
       syncBusinessMetricCascade("period");
       syncCompareFieldOptions();
       $("#blacklist-config").hidden = false;
+      $("#form-strategy-activity-name").value = "";
       $("#form-strategy-activity").value = "";
       $("#form-ban-scope").value = "CURRENT_ACTIVITY";
       syncStrategyScopeConfig();
@@ -4108,6 +4131,7 @@
       $("#strategy-modal-title").textContent = "编辑风控策略";
       $("#form-strategy-name").value = item.name;
       $("#form-rule-type").value = item.ruleType;
+      $("#form-strategy-activity-name").value = item.activityName || "";
       $("#form-strategy-activity").value = item.activityId || "";
       $("#form-scene").value = item.scene;
       $("#form-risk-type").value = item.type;
@@ -4148,7 +4172,12 @@
         return;
       }
       const ruleType = $("#form-rule-type").value;
+      const activityName = ruleType === "活动规则" ? $("#form-strategy-activity-name").value.trim() : "";
       const activityId = ruleType === "活动规则" ? $("#form-strategy-activity").value.trim() : "";
+      if (ruleType === "活动规则" && !activityName) {
+        showToast("请输入策略绑定的活动名称");
+        return;
+      }
       if (ruleType === "活动规则" && !activityId) {
         showToast("请输入策略绑定的活动ID");
         return;
@@ -4197,6 +4226,7 @@
       const data = {
         name,
         ruleType,
+        activityName,
         activityId,
         scene: $("#form-scene").value,
         type: $("#form-risk-type").value,
@@ -4330,10 +4360,12 @@
     function syncActivityBlacklistScopeConfig() {
       const effectScopeType = $("#form-blacklist-effect-scope").value;
       const isActivityScope = effectScopeType === "ACTIVITY";
+      $("#form-blacklist-activity-name-field").hidden = !isActivityScope;
       $("#form-blacklist-activity-field").hidden = !isActivityScope;
+      const activityName = isActivityScope ? $("#form-blacklist-activity-name").value.trim() : "";
       const activityId = isActivityScope ? $("#form-blacklist-activity").value.trim() : "";
       $("#blacklist-effect-scope-preview").textContent = isActivityScope
-        ? `活动黑名单 · 活动ID ${activityId || "待输入"}`
+        ? `活动黑名单 · ${activityName || "活动名称待输入"}（ID ${activityId || "待输入"}）`
         : "全局活动黑名单";
       $("#blacklist-global-warning").hidden = effectScopeType !== "GLOBAL";
       syncCustomSelects();
@@ -4359,6 +4391,7 @@
     function resetActivityBlacklistForm() {
       resetMultiBlacklistForm("activity");
       $("#form-blacklist-effect-scope").value = "ACTIVITY";
+      $("#form-blacklist-activity-name").value = "";
       $("#form-blacklist-activity").value = "";
       syncActivityBlacklistScopeConfig();
     }
@@ -4429,6 +4462,7 @@
       const entities = collectMultiBlacklistEntities(kind);
       const reason = $(isActivity ? "#form-blacklist-reason" : "#form-login-blacklist-reason").value.trim();
       const effectScopeType = isActivity ? $("#form-blacklist-effect-scope").value : "";
+      const activityName = isActivity && effectScopeType === "ACTIVITY" ? $("#form-blacklist-activity-name").value.trim() : "";
       const activityId = isActivity && effectScopeType === "ACTIVITY" ? $("#form-blacklist-activity").value.trim() : "";
       if (!entities.length) {
         showMultiBlacklistResult(kind, "请至少添加一个封禁实体");
@@ -4436,6 +4470,10 @@
       }
       if (!reason) {
         showMultiBlacklistResult(kind, "请填写封禁原因");
+        return;
+      }
+      if (isActivity && effectScopeType === "ACTIVITY" && !activityName) {
+        showMultiBlacklistResult(kind, "请输入名单适用的活动名称");
         return;
       }
       if (isActivity && effectScopeType === "ACTIVITY" && !activityId) {
@@ -4461,6 +4499,7 @@
         entities: entities.map(entity => ({ ...entity })),
         ...(isActivity ? {
           effectScopeType,
+          activityName,
           activityId,
           triggerActivityId: activityId,
           sourceStrategy: "-"
@@ -4592,6 +4631,7 @@
         type: entity.type,
         ...(kind === "activity" ? {
           effectScopeType: item.effectScopeType,
+          activityName: item.activityName,
           activityId: item.activityId
         } : {}),
         scope: item.scope,
@@ -4663,11 +4703,12 @@
 
     function exportBlacklists() {
       const rows = [
-        ["用户ID", "IP", "设备ID", "手机号", "手机号段", "实体类型", "名单生效范围", "活动ID", "限制动作", "数据来源", "来源策略", "封禁原因", "封禁时长", "封禁时间", "操作人"],
+        ["用户ID", "IP", "设备ID", "手机号", "手机号段", "实体类型", "名单生效范围", "活动名称", "活动ID", "限制动作", "数据来源", "来源策略", "封禁原因", "封禁时长", "封禁时间", "操作人"],
         ...blacklists.map(item => [
           ...entityCsvColumns(item),
           getEntityTypeText(item),
           item.effectScopeType === "GLOBAL" ? "全局活动" : "指定活动",
+          item.activityName || "",
           item.activityId || "",
           item.scope,
           item.source,
@@ -4796,10 +4837,12 @@
     });
 
     $("#form-rule-type").addEventListener("change", syncStrategyScopeConfig);
+    $("#form-strategy-activity-name").addEventListener("input", syncStrategyDispositionPreview);
     $("#form-strategy-activity").addEventListener("input", syncStrategyDispositionPreview);
     $("#form-ban-scope").addEventListener("change", syncStrategyDispositionPreview);
 
     $("#form-blacklist-effect-scope").addEventListener("change", syncActivityBlacklistScopeConfig);
+    $("#form-blacklist-activity-name").addEventListener("input", syncActivityBlacklistScopeConfig);
     $("#form-blacklist-activity").addEventListener("input", syncActivityBlacklistScopeConfig);
 
     $("#form-compare-left-field").addEventListener("change", () => {
